@@ -1,0 +1,19 @@
+{
+  "base_model": "stabilityai/stable-diffusion-3.5-medium",
+  "teacher_repo": "quanhaol/DiffusionOPD",
+  "teachers": {
+    "aesthetic": "AesTeacher/lora",
+    "ocr": "OCRTeacher/lora",
+    "geneval": "GenEvalTeacher/lora"
+  },
+  "teacher_extrapolation": 1.2,
+  "auxiliary_weight": 1.8,
+  "student_gains": [0.0, 0.05, 0.25, 0.5],
+  "history_decay": 0.995,
+  "learning_rate": 0.0003,
+  "cases_per_task_per_rank": 3,
+  "updates_per_round": 2,
+  "updates": 1000,
+  "save_every": 100,
+  "seed": 42
+}

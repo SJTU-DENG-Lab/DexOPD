@@ -1,0 +1,49 @@
+# Python and tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage*
+build/
+dist/
+*.egg-info/
+
+# Local environments and editors
+.env
+.venv/
+env/
+venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# External dependencies, weights, and scorer assets
+.cache/
+cache/
+.huggingface/
+mmcv/
+mmdetection/
+HPSv2/
+weights/
+*.safetensors
+*.ckpt
+*.pth
+*.pt
+*.bin
+/assets/ocr/
+/assets/geneval/
+/assets/reward_ckpts/
+/models/
+
+# Training and evaluation outputs
+runs/
+checkpoints/
+results/
+outputs/
+evaluation_output/
+log_save_images/
+logs/
+*.log
+*.err

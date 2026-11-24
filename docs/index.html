@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DexOPD | Dual-Extrapolation On-Policy Distillation</title>
+  <meta name="description" content="Explore DexOPD, a dual-extrapolation distillation method that unifies compositional accuracy, text rendering, and visual quality in one diffusion model.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models">
+  <meta property="og:description" content="One diffusion model for composition, text rendering, and visual quality. Explore same-noise comparisons from the paper.">
+  <meta property="og:image" content="https://sjtu-deng-lab.github.io/DexOPD/assets/preview.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#101719">
+  <link rel="preload" as="image" href="assets/hero.webp">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="examples.js"></script>
+  <script defer src="site.js"></script>
+</head>
+<body id="top">
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></symbol>
+    <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-columns" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></symbol>
+    <symbol id="i-wipe" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="m16 16 4-4-4-4"/><path d="m8 8-4 4 4 4"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-chevrons" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5"/><path d="m15 7 5 5-5 5"/></symbol>
+  </svg>
+  <template id="zoom-icon"><span class="zoom-icon" aria-hidden="true"><svg class="icon"><use href="#i-expand"/></svg></span></template>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container site-nav">
+      <a class="wordmark" href="#top"><span class="wordmark-dot" aria-hidden="true"></span>DexOPD</a>
+      <nav aria-label="Main navigation">
+        <a href="#demo">Demo</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+      </nav>
+      <a class="code-link" href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="title">
+      <div class="container hero-content">
+        <h1 id="title">DexOPD</h1>
+        <p class="paper-title">Dual-Extrapolation On-Policy<br class="desktop-break"> Distillation for Diffusion Models</p>
+        <p class="authors">Yunchao Ke<sup>1,2,*,&Dagger;</sup>, Yanzhe Hu<sup>1,*</sup>, Yi Yang<sup>1</sup>, Jiachun Jin<sup>1</sup>, Zhihong Liu<sup>1</sup>, Zhijie Deng<sup>1,&dagger;</sup></p>
+        <p class="affiliations"><sup>1</sup> Shanghai Jiao Tong University <span aria-hidden="true">&middot;</span> <sup>2</sup> Nankai University</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#demo">Explore the demo <svg class="icon" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
+          <a class="button hero-paper" href="assets/dexopd-paper.pdf"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg> Read paper</a>
+          <a class="button hero-paper" href="https://huggingface.co/kyc001/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Model weights</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="score-band">
+      <div class="container score-grid">
+        <div class="score"><strong>0.9736</strong><span>GenEval reward<small>Compositional alignment</small></span></div>
+        <div class="score"><strong>0.9515</strong><span>OCR score<small>Text rendering</small></span></div>
+        <div class="score"><strong>6.4875</strong><span>DrawBench Aesthetic<small>Visual quality</small></span></div>
+      </div>
+    </div>
+
+    <section class="section demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="demo-title">Compare model outputs</h2>
+          <p>Pre-generated results for six paper prompts, compared with the same initial noise for each prompt.</p>
+        </div>
+        <noscript><p>The interactive comparison requires JavaScript. The images also appear in the <a href="assets/dexopd-paper.pdf">paper PDF</a>.</p></noscript>
+        <div id="comparison" class="comparison" hidden>
+          <aside class="prompt-panel" aria-labelledby="prompt-list-title">
+            <h3 id="prompt-list-title">Prompts</h3>
+            <div id="prompt-list" class="prompt-list" role="group" aria-labelledby="prompt-list-title"></div>
+          </aside>
+          <div class="compare-stage">
+            <div class="prompt-display" aria-live="polite">
+              <p class="category" id="compare-category"></p>
+              <blockquote id="compare-prompt"></blockquote>
+            </div>
+            <div class="compare-toolbar">
+              <label for="baseline">Compare with</label>
+              <select id="baseline">
+                <option value="dreopd">DreOPD</option>
+                <option value="diffusionopd">DiffusionOPD</option>
+                <option value="geneval">GenEval Teacher</option>
+                <option value="ocr">OCR Teacher</option>
+                <option value="aesthetic">Aesthetic Teacher</option>
+              </select>
+              <div class="segmented view-controls" role="group" aria-label="Comparison view">
+                <button id="side-mode" type="button" aria-pressed="true" aria-label="Side by side" title="Side by side"><svg class="icon" aria-hidden="true"><use href="#i-columns"/></svg></button>
+                <button id="wipe-mode" type="button" aria-pressed="false" aria-label="Image wipe" title="Image wipe"><svg class="icon" aria-hidden="true"><use href="#i-wipe"/></svg></button>
+              </div>
+            </div>
+            <div id="side-view" class="image-pair">
+              <figure class="comparison-image" id="baseline-figure"></figure>
+              <figure class="comparison-image dex-image" id="dex-figure"></figure>
+            </div>
+            <div id="wipe-view" hidden>
+              <div class="wipe-labels" aria-hidden="true"><span id="wipe-baseline-name"></span><strong>DexOPD</strong></div>
+              <div class="wipe-stage">
+                <img id="wipe-baseline-image" width="1024" height="1024" alt="">
+                <img id="wipe-dex-image" class="wipe-top" width="1024" height="1024" alt="">
+                <span class="wipe-divider" aria-hidden="true"><span><svg class="icon"><use href="#i-chevrons"/></svg></span></span>
+                <input class="wipe-input" id="wipe-position" type="range" min="0" max="100" value="50" aria-label="Baseline image reveal percentage">
+              </div>
+            </div>
+            <p id="compare-settings" class="image-settings"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="gallery-title">One student, three capabilities</h2>
+          <p>Selected outputs from the same DexOPD checkpoint.</p>
+        </div>
+        <div id="gallery-tabs" class="segmented gallery-tabs" role="tablist" aria-label="Gallery categories" hidden>
+          <button type="button" id="tab-composition" role="tab" aria-controls="gallery-composition" aria-selected="true" data-category="composition">Composition</button>
+          <button type="button" id="tab-text" role="tab" aria-controls="gallery-text" aria-selected="false" tabindex="-1" data-category="text">Text rendering</button>
+          <button type="button" id="tab-aesthetic" role="tab" aria-controls="gallery-aesthetic" aria-selected="false" tabindex="-1" data-category="aesthetic">Aesthetics</button>
+        </div>
+        <div id="gallery-composition" class="gallery-grid" role="tabpanel" aria-labelledby="tab-composition" hidden></div>
+        <div id="gallery-text" class="gallery-grid" role="tabpanel" aria-labelledby="tab-text" hidden></div>
+        <div id="gallery-aesthetic" class="gallery-grid" role="tabpanel" aria-labelledby="tab-aesthetic" hidden></div>
+      </div>
+    </section>
+
+    <section class="section method-section" id="method" aria-labelledby="method-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="method-title">Dual extrapolation</h2>
+          <p>DexOPD distills three SD3.5-Medium specialists into a single student. Extrapolated teachers guide the student on its own trajectories, while reward feedback builds on the student's recent training progress.</p>
+        </div>
+        <figure class="method-figure">
+          <img src="assets/method.png" width="2400" height="901" loading="lazy" decoding="async" alt="Training diagram showing extrapolated teacher targets, candidate generation from the current and historical student, and a joint distillation update.">
+        </figure>
+        <div class="method-grid">
+          <div><h3>Teacher extrapolation</h3><p>For each task, extrapolate along the velocity difference between the frozen specialist and the base model to supervise native student states.</p></div>
+          <div><h3>Student self-extrapolation</h3><p>Use a historical EMA of the student to generate same-noise candidates. Pairwise reward differences define an auxiliary training direction.</p></div>
+          <div><h3>Standard inference</h3><p>The trained student samples a single trajectory with the standard SD3.5-Medium pipeline.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section results-section" id="results" aria-labelledby="results-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="results-title">Benchmark results</h2>
+          <p>DexOPD leads the methods in the main comparison on GenEval reward, OCR, and DrawBench Aesthetic.</p>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Primary benchmark comparison" tabindex="0">
+          <table>
+            <caption class="screen-reader">Primary benchmark scores. Higher is better in each column.</caption>
+            <thead><tr><th scope="col">Model</th><th scope="col">GenEval reward</th><th scope="col">OCR</th><th scope="col">DrawBench Aesthetic</th></tr></thead>
+            <tbody>
+              <tr class="group-row"><th scope="rowgroup" colspan="4">Base model</th></tr>
+              <tr><th scope="row">SD3.5-Medium</th><td>0.6446</td><td>0.5486</td><td>5.3899</td></tr>
+            </tbody>
+            <tbody>
+              <tr class="group-row"><th scope="rowgroup" colspan="4">Single-task specialists</th></tr>
+              <tr><th scope="row">GenEval Teacher</th><td>0.9534</td><td>0.6515</td><td>5.2635</td></tr>
+              <tr><th scope="row">OCR Teacher</th><td>0.6617</td><td>0.9435</td><td>5.2605</td></tr>
+              <tr><th scope="row">Aesthetic Teacher</th><td>0.4791</td><td>0.5881</td><td>6.2162</td></tr>
+            </tbody>
+            <tbody>
+              <tr class="group-row"><th scope="rowgroup" colspan="4">Multi-task reinforcement learning</th></tr>
+              <tr><th scope="row">GRPO-Guard</th><td>0.7202</td><td>0.7210</td><td>5.6812</td></tr>
+              <tr><th scope="row">DiffusionNFT</th><td>0.7029</td><td>0.9434</td><td>5.3674</td></tr>
+              <tr><th scope="row">DiffusionART</th><td>0.4427</td><td>0.9033</td><td>5.6673</td></tr>
+            </tbody>
+            <tbody>
+              <tr class="group-row"><th scope="rowgroup" colspan="4">Multi-teacher on-policy distillation</th></tr>
+              <tr><th scope="row">DiffusionOPD</th><td>0.9543</td><td>0.9371</td><td>6.1820</td></tr>
+              <tr><th scope="row">DreOPD</th><td>0.9622</td><td>0.9354</td><td>6.2182</td></tr>
+              <tr><th scope="row">STEP-OPD*</th><td>0.9562</td><td>0.9378</td><td>6.2813</td></tr>
+              <tr class="ours"><th scope="row">DexOPD (ours)</th><td>0.9736</td><td>0.9515</td><td>6.4875</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Higher is better for each metric. * Paper-based reproduction. See <a href="assets/dexopd-paper.pdf">Table 1 in the paper</a> for the full metrics.</p>
+      </div>
+    </section>
+
+    <section class="section citation-section" id="citation" aria-labelledby="citation-title">
+      <div class="container citation-layout">
+        <div class="section-heading"><h2 id="citation-title">Citation</h2><p>Ke, Hu, Yang, Jin, Liu, and Deng, 2026.</p></div>
+        <div class="bibtex">
+          <button class="button copy-button" id="copy-citation" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy BibTeX</span></button>
+          <pre><code id="bibtex-code">@misc{ke2026dexopd,
+  title  = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
+  author = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
+  year   = {2026}
+}</code></pre>
+          <span id="copy-status" class="screen-reader" role="status"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University</p>
+      <p>* Equal contribution. &Dagger; Work done during an internship at Shanghai Jiao Tong University. &dagger; <a href="mailto:zhijied@sjtu.edu.cn">Corresponding author</a>.</p>
+    </div>
+  </footer>
+
+  <dialog id="lightbox" aria-labelledby="lightbox-title">
+    <div class="lightbox-bar">
+      <h2 id="lightbox-title"></h2>
+      <button class="icon-button" id="close-lightbox" type="button" aria-label="Close image" title="Close image" autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <img id="lightbox-image" width="1024" height="1024" alt="">
+    <div class="lightbox-caption"><p id="lightbox-prompt"></p><p id="lightbox-settings" class="image-settings"></p></div>
+  </dialog>
+</body>
+</html>
