@@ -32,7 +32,7 @@ Shanghai Jiao Tong University · Nankai University
 | Adapter format | [PEFT LoRA (`adapter_model.safetensors`, ~75 MB)](https://huggingface.co/kyc001/DexOPD/blob/main/adapter_model.safetensors) attached to the SD3 transformer |
 | LoRA config | [Rank 32, alpha 64 (`adapter_config.json`)](https://huggingface.co/kyc001/DexOPD/blob/main/adapter_config.json) on attention projections (`to_q`, `to_k`, `to_v`, `to_out.0`, `add_q_proj`, `add_k_proj`, `add_v_proj`, `to_add_out`) |
 | Released step | Evaluation EMA after 1,000 optimizer updates (500 rounds) |
-| Training recipe | 72 native cases / update (24 per task), teacher extrapolation $\lambda = 1.2$, auxiliary weight $\beta = 1.8$, candidate gains $\mathcal{G} = \{0, 0.05, 0.25, 0.5\}$, history EMA decay $\tau = 0.995$ |
+| Training recipe | 72 native cases / update (24 per task), teacher extrapolation λ = 1.2, auxiliary weight β = 1.8, candidate gains 𝒢 = {0, 0.05, 0.25, 0.5}, history EMA decay τ = 0.995 |
 | Training resolution | 512 × 512 (paper evaluation at 512 × 512; gallery examples generated at 1024 × 1024) |
 
 ## Quick start (CUDA inference)
@@ -79,8 +79,8 @@ image.save("dexopd.png")
 
 During on-policy distillation, the student collects 10-step deterministic Euler trajectories and receives two complementary signals at each visited state:
 
-1. **Teacher extrapolation ($\lambda = 1.2$):** For each task specialist $v_T$ and the frozen base model $v_B$, DexOPD constructs a strengthened proxy velocity $v_{\text{proxy}} = v_T + \lambda(v_T - v_B)$ and takes one Euler step to form the distillation target.
-2. **Reward-guided student self-extrapolation ($\beta = 1.8$):** Using an evolving historical EMA $H_r$ of the student ($\tau = 0.995$), DexOPD integrates four candidate rollouts from shared initial noise under gains $\mathcal{G} = \{0, 0.05, 0.25, 0.5\}$. Whenever candidates earn distinct task rewards, their normalized endpoint–reward covariance $G = C / \text{RMS}(C)$ supplies an auxiliary target; tied groups automatically deactivate ($G = 0$).
+1. **Teacher extrapolation (λ = 1.2):** For each task specialist *v*<sub>T</sub> and the frozen base model *v*<sub>B</sub>, DexOPD constructs a strengthened proxy velocity *v*<sub>proxy</sub> = *v*<sub>T</sub> + λ(*v*<sub>T</sub> − *v*<sub>B</sub>) and takes one Euler step to form the distillation target.
+2. **Reward-guided student self-extrapolation (β = 1.8):** Using an evolving historical EMA *H*<sub>r</sub> of the student (τ = 0.995), DexOPD integrates four candidate rollouts from shared initial noise under gains 𝒢 = {0, 0.05, 0.25, 0.5}. Whenever candidates earn distinct task rewards, their normalized endpoint–reward covariance *G* = *C* / RMS(*C*) supplies an auxiliary target; tied groups automatically deactivate (*G* = 0).
 
 ![DexOPD training framework](https://raw.githubusercontent.com/SJTU-DENG-Lab/DexOPD/main/assets/method.png)
 
@@ -111,9 +111,9 @@ All trained models share the SD3.5-Medium backbone and a 1,000-update budget, ev
 | Configuration | GenEval Reward | OCR | Aesthetic |
 | --- | ---: | ---: | ---: |
 | **DexOPD (default)** | **0.9736** | **0.9515** | **6.4875** |
-| No teacher extrapolation ($\lambda = 0$) | 0.9515 | 0.9357 | 6.2930 |
-| No student auxiliary ($\beta = 0$) | 0.9669 | 0.9408 | 6.4410 |
-| Frozen-base reference ($H_r = B$) | 0.9633 | 0.9512 | 6.2548 |
+| No teacher extrapolation (λ = 0) | 0.9515 | 0.9357 | 6.2930 |
+| No student auxiliary (β = 0) | 0.9669 | 0.9408 | 6.4410 |
+| Frozen-base reference (*H*<sub>r</sub> = *B*) | 0.9633 | 0.9512 | 6.2548 |
 
 ## Intended use & limitations
 
