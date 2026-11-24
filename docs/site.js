@@ -120,35 +120,101 @@ for (const example of gallery) {
   get(`gallery-${example.category}`).append(tile);
 }
 
-const galleryTabs = [...get('gallery-tabs').querySelectorAll('[role="tab"]')];
-function selectGalleryTab(current) {
-  for (const tab of galleryTabs) {
-    const selected = tab === current;
-    tab.setAttribute('aria-selected', selected);
-    tab.tabIndex = selected ? 0 : -1;
-    get(tab.getAttribute('aria-controls')).hidden = !selected;
+function setupTabs(list) {
+  const tabs = [...list.querySelectorAll('[role="tab"]')];
+  function select(current) {
+    for (const tab of tabs) {
+      const selected = tab === current;
+      tab.setAttribute('aria-selected', selected);
+      tab.tabIndex = selected ? 0 : -1;
+      const panel = get(tab.getAttribute('aria-controls'));
+      panel.hidden = !selected;
+      panel.setAttribute('aria-labelledby', tab.id);
+    }
   }
+  for (const [index, tab] of tabs.entries()) {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (event) => {
+      const count = tabs.length;
+      const next = {
+        ArrowLeft: (index + count - 1) % count,
+        ArrowRight: (index + 1) % count,
+        Home: 0,
+        End: count - 1,
+      }[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      select(tabs[next]);
+      tabs[next].focus();
+    });
+  }
+  select(tabs[0]);
+  list.hidden = false;
 }
 
-for (const [index, tab] of galleryTabs.entries()) {
-  tab.addEventListener('click', () => selectGalleryTab(tab));
-  tab.addEventListener('keydown', (event) => {
-    const count = galleryTabs.length;
-    const next = {
-      ArrowLeft: (index + count - 1) % count,
-      ArrowRight: (index + 1) % count,
-      Home: 0,
-      End: count - 1,
-    }[event.key];
-    if (next === undefined) return;
-    event.preventDefault();
-    selectGalleryTab(galleryTabs[next]);
-    galleryTabs[next].focus();
-  });
+setupTabs(get('gallery-tabs'));
+setupTabs(get('method-tabs'));
+
+const rolloutLayer = get('rollout-markers');
+const progress = get('rollout-progress');
+const markers = window.DEXOPD_TRAJECTORIES.map(({path, color}) => {
+  const curve = document.createElementNS(rolloutLayer.namespaceURI, 'path');
+  curve.setAttribute('d', path);
+  curve.setAttribute('fill', 'none');
+  const dot = document.createElementNS(rolloutLayer.namespaceURI, 'circle');
+  dot.setAttribute('r', '5.1');
+  dot.setAttribute('fill', color);
+  dot.setAttribute('stroke', '#fff');
+  dot.setAttribute('stroke-width', '2');
+  rolloutLayer.append(curve, dot);
+  return {curve, dot, length: curve.getTotalLength()};
+});
+
+function setRolloutProgress() {
+  const fraction = progress.valueAsNumber / 100;
+  for (const {curve, dot, length} of markers) {
+    const point = curve.getPointAtLength(length * fraction);
+    dot.setAttribute('cx', point.x);
+    dot.setAttribute('cy', point.y);
+  }
+  progress.setAttribute('aria-valuetext', progress.value + ' percent');
 }
 
-selectGalleryTab(galleryTabs[0]);
-get('gallery-tabs').hidden = false;
+progress.addEventListener('input', setRolloutProgress);
+setRolloutProgress();
+get('rollout-control').hidden = false;
+
+const rewardDrawing = get('reward-drawing');
+const rewardExplanation = get('reward-explanation');
+const rewardEquation = get('reward-equation');
+const rewardCaption = rewardDrawing.nextElementSibling;
+const unequalRewards = {
+  src: rewardDrawing.getAttribute('src'), alt: rewardDrawing.alt,
+  explanation: rewardExplanation.textContent, equation: rewardEquation.textContent,
+  equationLabel: rewardEquation.getAttribute('aria-label'), caption: rewardCaption.textContent,
+};
+const tiedRewards = {
+  src: 'assets/method-ties.svg',
+  alt: 'The same four endpoints each score 0.5. Their endpoint–reward covariance is zero.',
+  explanation: 'All four candidates earn the same reward. Every pairwise reward difference is zero, so the auxiliary loss is inactive and the teacher supplies the training target.',
+  equation: 'G = 0', equationLabel: 'G equals zero',
+  caption: 'The endpoints stay fixed. Assigning 0.5 to all four cancels the auxiliary direction.',
+};
+
+function showRewardCase(example) {
+  rewardDrawing.src = example.src;
+  rewardDrawing.alt = example.alt;
+  rewardExplanation.textContent = example.explanation;
+  rewardCaption.textContent = example.caption;
+  rewardEquation.textContent = example.equation;
+  rewardEquation.setAttribute('aria-label', example.equationLabel);
+  get('unequal-rewards').setAttribute('aria-pressed', example === unequalRewards);
+  get('equal-rewards').setAttribute('aria-pressed', example === tiedRewards);
+}
+
+get('unequal-rewards').addEventListener('click', () => showRewardCase(unequalRewards));
+get('equal-rewards').addEventListener('click', () => showRewardCase(tiedRewards));
+get('reward-states').hidden = false;
 
 get('close-lightbox').addEventListener('click', () => lightbox.close());
 lightbox.addEventListener('click', (event) => {
