@@ -16,10 +16,12 @@ model and uses reward-scored student rollouts to guide student self-extrapolatio
 
 ![DexOPD paper teaser](assets/teaser.png)
 
-## Project page and demo
+## Project page and examples
 
-Visit the [project page and demo](https://sjtu-deng-lab.github.io/DexOPD/) to
-compare pre-generated paper examples. For a local preview, open
+Visit the [project page](https://sjtu-deng-lab.github.io/DexOPD/) for
+interactive method diagrams, complete Table 1 results, and ablation charts, or
+open the [qualitative comparisons](https://sjtu-deng-lab.github.io/DexOPD/examples.html)
+to inspect pre-generated paper examples. For a local preview, open
 [`docs/index.html`](docs/index.html) in a browser. The site works without a
 build step or model inference.
 

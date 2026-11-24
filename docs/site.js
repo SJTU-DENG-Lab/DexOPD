@@ -1,126 +1,18 @@
 'use strict';
 
-const { comparison, gallery } = window.DEXOPD_EXAMPLES;
-const categories = { composition: 'Composition', text: 'Text rendering', aesthetic: 'Aesthetics' };
-const assets = 'assets/';
+// Preserve legacy #demo and #gallery links by redirecting to the dedicated examples page.
+function redirectLegacyHash() {
+  if (window.location.hash === '#demo' || window.location.hash === '#gallery') {
+    window.location.replace(`examples.html${window.location.hash}`);
+  }
+}
+redirectLegacyHash();
+window.addEventListener('hashchange', redirectLegacyHash);
+
 const get = (id) => document.getElementById(id);
 
-const baseline = get('baseline');
-const sideMode = get('side-mode');
-const wipeMode = get('wipe-mode');
-const wipePosition = get('wipe-position');
-const lightbox = get('lightbox');
-let activeCase = comparison.find((example) => example.id === 'ocr-089');
-
-function element(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text) node.textContent = text;
-  return node;
-}
-
-function imageSettings(example, cfg) {
-  return `${example.resolution.join(' \u00d7 ')} \u00b7 ${example.steps} steps \u00b7 Seed ${example.seed} \u00b7 CFG ${cfg}`;
-}
-
-function openImage(example, image, title, cfg) {
-  get('lightbox-title').textContent = title;
-  get('lightbox-prompt').textContent = example.prompt;
-  get('lightbox-settings').textContent = imageSettings(example, cfg);
-  const preview = get('lightbox-image');
-  preview.alt = title;
-  preview.src = assets + image;
-  lightbox.showModal();
-}
-
-function imageButton(example, image, title, cfg, lazy = false) {
-  const button = element('button', 'zoom-image');
-  button.type = 'button';
-  button.title = 'View full image';
-  button.setAttribute('aria-label', `View full image: ${title}`);
-  const img = new Image(...example.resolution);
-  img.alt = '';
-  if (lazy) {
-    img.loading = 'lazy';
-    img.decoding = 'async';
-  }
-  img.src = assets + image;
-  const icon = get('zoom-icon').content.cloneNode(true);
-  button.append(img, icon);
-  button.addEventListener('click', () => openImage(example, image, title, cfg));
-  return button;
-}
-
-function renderComparison() {
-  const model = baseline.selectedOptions[0].textContent;
-  const example = activeCase;
-  const other = example.samples[baseline.value];
-  const dex = example.samples.dexopd;
-  get('baseline-figure').replaceChildren(
-    element('figcaption', '', model),
-    imageButton(example, other.image, `${example.name} / ${model}`, other.cfg),
-  );
-  get('dex-figure').replaceChildren(
-    element('figcaption', '', 'DexOPD'),
-    imageButton(example, dex.image, `${example.name} / DexOPD`, dex.cfg),
-  );
-  get('wipe-baseline-name').textContent = model;
-  get('wipe-baseline-image').src = assets + other.image;
-  get('wipe-baseline-image').alt = `${example.name} from ${model}`;
-  get('wipe-dex-image').src = assets + dex.image;
-  get('wipe-dex-image').alt = `${example.name} from DexOPD`;
-  const cfg = other.cfg === dex.cfg ? dex.cfg : `${other.cfg} (${model}) / ${dex.cfg} (DexOPD)`;
-  get('compare-settings').textContent = imageSettings(example, cfg);
-}
-
-function selectPrompt(example) {
-  activeCase = example;
-  for (const button of get('prompt-list').children) {
-    button.setAttribute('aria-pressed', button.dataset.case === example.id);
-  }
-  get('compare-category').textContent = categories[example.category];
-  get('compare-prompt').textContent = example.prompt;
-  renderComparison();
-}
-
-for (const example of comparison) {
-  const button = element('button', 'prompt-option');
-  const thumb = new Image(96, 96);
-  thumb.alt = '';
-  thumb.src = `${assets}thumb-${example.id}.webp`;
-  button.type = 'button';
-  button.dataset.case = example.id;
-  button.append(thumb, element('span', '', example.name));
-  button.addEventListener('click', () => selectPrompt(example));
-  get('prompt-list').append(button);
-}
-
-function setView(wipe) {
-  sideMode.setAttribute('aria-pressed', !wipe);
-  wipeMode.setAttribute('aria-pressed', wipe);
-  get('side-view').hidden = wipe;
-  get('wipe-view').hidden = !wipe;
-}
-
-baseline.addEventListener('change', renderComparison);
-sideMode.addEventListener('click', () => setView(false));
-wipeMode.addEventListener('click', () => setView(true));
-wipePosition.addEventListener('input', () => {
-  wipePosition.parentElement.style.setProperty('--wipe', `${wipePosition.value}%`);
-});
-selectPrompt(activeCase);
-get('comparison').hidden = false;
-
-for (const example of gallery) {
-  const tile = element('figure', 'gallery-tile');
-  tile.append(
-    imageButton(example, example.image, example.name, example.cfg, true),
-    element('figcaption', '', example.name),
-  );
-  get(`gallery-${example.category}`).append(tile);
-}
-
 function setupTabs(list) {
+  if (!list) return;
   const tabs = [...list.querySelectorAll('[role="tab"]')];
   function select(current) {
     for (const tab of tabs) {
@@ -128,8 +20,10 @@ function setupTabs(list) {
       tab.setAttribute('aria-selected', selected);
       tab.tabIndex = selected ? 0 : -1;
       const panel = get(tab.getAttribute('aria-controls'));
-      panel.hidden = !selected;
-      panel.setAttribute('aria-labelledby', tab.id);
+      if (panel) {
+        panel.hidden = !selected;
+        panel.setAttribute('aria-labelledby', tab.id);
+      }
     }
   }
   for (const [index, tab] of tabs.entries()) {
@@ -152,101 +46,135 @@ function setupTabs(list) {
   list.hidden = false;
 }
 
-setupTabs(get('gallery-tabs'));
 setupTabs(get('method-tabs'));
 
+// Interactive trajectory markers on the Student candidates manifold
 const rolloutLayer = get('rollout-markers');
 const progress = get('rollout-progress');
-const markers = window.DEXOPD_TRAJECTORIES.map(({path, color}) => {
-  const curve = document.createElementNS(rolloutLayer.namespaceURI, 'path');
-  curve.setAttribute('d', path);
-  curve.setAttribute('fill', 'none');
-  const dot = document.createElementNS(rolloutLayer.namespaceURI, 'circle');
-  dot.setAttribute('r', '5.1');
-  dot.setAttribute('fill', color);
-  dot.setAttribute('stroke', '#fff');
-  dot.setAttribute('stroke-width', '2');
-  rolloutLayer.append(curve, dot);
-  return {curve, dot, length: curve.getTotalLength()};
-});
+if (rolloutLayer && progress && window.DEXOPD_TRAJECTORIES) {
+  const markers = window.DEXOPD_TRAJECTORIES.map(({ path, color }) => {
+    const curve = document.createElementNS(rolloutLayer.namespaceURI, 'path');
+    curve.setAttribute('d', path);
+    curve.setAttribute('fill', 'none');
+    const dot = document.createElementNS(rolloutLayer.namespaceURI, 'circle');
+    dot.setAttribute('r', '5.1');
+    dot.setAttribute('fill', color);
+    dot.setAttribute('stroke', '#fff');
+    dot.setAttribute('stroke-width', '2');
+    rolloutLayer.append(curve, dot);
+    return { curve, dot, length: curve.getTotalLength() };
+  });
 
-function setRolloutProgress() {
-  const fraction = progress.valueAsNumber / 100;
-  for (const {curve, dot, length} of markers) {
-    const point = curve.getPointAtLength(length * fraction);
-    dot.setAttribute('cx', point.x);
-    dot.setAttribute('cy', point.y);
+  function setRolloutProgress() {
+    const fraction = progress.valueAsNumber / 100;
+    for (const { curve, dot, length } of markers) {
+      const point = curve.getPointAtLength(length * fraction);
+      dot.setAttribute('cx', point.x);
+      dot.setAttribute('cy', point.y);
+    }
+    progress.setAttribute('aria-valuetext', `${progress.value} percent`);
   }
-  progress.setAttribute('aria-valuetext', progress.value + ' percent');
+
+  progress.addEventListener('input', setRolloutProgress);
+  setRolloutProgress();
+  const control = get('rollout-control');
+  if (control) control.hidden = false;
 }
 
-progress.addEventListener('input', setRolloutProgress);
-setRolloutProgress();
-get('rollout-control').hidden = false;
-
+// Reward feedback state switcher (Different vs Tied rewards)
 const rewardDrawing = get('reward-drawing');
 const rewardExplanation = get('reward-explanation');
 const rewardEquation = get('reward-equation');
-const rewardCaption = rewardDrawing.nextElementSibling;
-const unequalRewards = {
-  src: rewardDrawing.getAttribute('src'), alt: rewardDrawing.alt,
-  explanation: rewardExplanation.textContent, equation: rewardEquation.textContent,
-  equationLabel: rewardEquation.getAttribute('aria-label'), caption: rewardCaption.textContent,
-};
-const tiedRewards = {
-  src: 'assets/method-ties.svg',
-  alt: 'The same four endpoints each score 0.5. Their endpoint–reward covariance is zero.',
-  explanation: 'All four candidates earn the same reward. Every pairwise reward difference is zero, so the auxiliary loss is inactive and the teacher supplies the training target.',
-  equation: 'G = 0', equationLabel: 'G equals zero',
-  caption: 'The endpoints stay fixed. Assigning 0.5 to all four cancels the auxiliary direction.',
-};
+if (rewardDrawing && rewardExplanation && rewardEquation) {
+  const rewardCaption = rewardDrawing.nextElementSibling;
+  const unequalRewards = {
+    src: rewardDrawing.getAttribute('src'),
+    alt: rewardDrawing.alt,
+    explanation: rewardExplanation.textContent,
+    equation: rewardEquation.textContent,
+    equationLabel: rewardEquation.getAttribute('aria-label'),
+    caption: rewardCaption.textContent,
+  };
+  const tiedRewards = {
+    src: 'assets/method-ties.svg',
+    alt: 'The same four endpoints each score 0.5. Their endpoint\u2013reward covariance is zero.',
+    explanation: 'All four candidates earn the same reward. Every pairwise reward difference is zero, so the auxiliary loss is inactive and the teacher supplies the training target.',
+    equation: 'G = 0',
+    equationLabel: 'G equals zero',
+    caption: 'The endpoints stay fixed. Assigning 0.5 to all four cancels the auxiliary direction.',
+  };
 
-function showRewardCase(example) {
-  rewardDrawing.src = example.src;
-  rewardDrawing.alt = example.alt;
-  rewardExplanation.textContent = example.explanation;
-  rewardCaption.textContent = example.caption;
-  rewardEquation.textContent = example.equation;
-  rewardEquation.setAttribute('aria-label', example.equationLabel);
-  get('unequal-rewards').setAttribute('aria-pressed', example === unequalRewards);
-  get('equal-rewards').setAttribute('aria-pressed', example === tiedRewards);
+  function showRewardCase(example) {
+    rewardDrawing.src = example.src;
+    rewardDrawing.alt = example.alt;
+    rewardExplanation.textContent = example.explanation;
+    rewardCaption.textContent = example.caption;
+    rewardEquation.textContent = example.equation;
+    rewardEquation.setAttribute('aria-label', example.equationLabel);
+    get('unequal-rewards').setAttribute('aria-pressed', example === unequalRewards);
+    get('equal-rewards').setAttribute('aria-pressed', example === tiedRewards);
+  }
+
+  get('unequal-rewards').addEventListener('click', () => showRewardCase(unequalRewards));
+  get('equal-rewards').addEventListener('click', () => showRewardCase(tiedRewards));
+  get('reward-states').hidden = false;
 }
 
-get('unequal-rewards').addEventListener('click', () => showRewardCase(unequalRewards));
-get('equal-rewards').addEventListener('click', () => showRewardCase(tiedRewards));
-get('reward-states').hidden = false;
-
-get('close-lightbox').addEventListener('click', () => lightbox.close());
-lightbox.addEventListener('click', (event) => {
-  if (event.target === lightbox) lightbox.close();
-});
-
-const copyButton = get('copy-citation');
-const bibtex = get('bibtex-code');
-let copyReset;
-copyButton.hidden = false;
-copyButton.addEventListener('click', async () => {
-  let message = 'BibTeX copied';
-  try {
-    await navigator.clipboard.writeText(bibtex.textContent);
-  } catch {
-    const selection = window.getSelection();
-    selection.selectAllChildren(bibtex);
-    message = 'BibTeX selected';
+// Reusable copy button handler
+function wireCopyButton(buttonId, codeId, idleLabel, doneLabel) {
+  const button = get(buttonId);
+  const code = get(codeId);
+  if (!button || !code) return;
+  let timer;
+  button.hidden = false;
+  button.addEventListener('click', async () => {
+    let message = doneLabel;
     try {
-      if (document.execCommand('copy')) {
-        selection.removeAllRanges();
-        message = 'BibTeX copied';
-      }
+      await navigator.clipboard.writeText(code.textContent);
     } catch {
-      // The selected citation remains available for manual copying.
+      const selection = window.getSelection();
+      selection.selectAllChildren(code);
+      message = 'Selected';
+      try {
+        if (document.execCommand('copy')) {
+          selection.removeAllRanges();
+          message = doneLabel;
+        }
+      } catch {
+        // Keep selection available for manual copy.
+      }
     }
-  }
-  get('copy-status').textContent = message;
-  copyButton.querySelector('span').textContent = message;
-  clearTimeout(copyReset);
-  copyReset = setTimeout(() => {
-    get('copy-status').textContent = '';
-    copyButton.querySelector('span').textContent = 'Copy BibTeX';
-  }, 2200);
-});
+    const status = get('copy-status');
+    if (status) status.textContent = message;
+    button.querySelector('span').textContent = message;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (status) status.textContent = '';
+      button.querySelector('span').textContent = idleLabel;
+    }, 2200);
+  });
+}
+
+wireCopyButton('copy-citation', 'bibtex-code', 'Copy BibTeX', 'BibTeX copied');
+wireCopyButton('copy-snippet', 'snippet-code', 'Copy snippet', 'Snippet copied');
+
+// Highlight active section in sticky header
+const navLinks = [...document.querySelectorAll('#primary-nav a[href^="#"]')];
+if (navLinks.length && 'IntersectionObserver' in window) {
+  const sections = navLinks
+    .map((a) => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const id = `#${entry.target.id}`;
+        for (const a of navLinks) {
+          a.classList.toggle('is-active', a.getAttribute('href') === id);
+        }
+      }
+    },
+    { rootMargin: '-25% 0px -60% 0px', threshold: 0 },
+  );
+  for (const sec of sections) observer.observe(sec);
+}

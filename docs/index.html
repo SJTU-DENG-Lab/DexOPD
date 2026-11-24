@@ -4,42 +4,40 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DexOPD | Dual-Extrapolation On-Policy Distillation</title>
-  <meta name="description" content="Explore DexOPD, a dual-extrapolation distillation method that unifies compositional accuracy, text rendering, and visual quality in one diffusion model.">
+  <meta name="description" content="DexOPD consolidates three specialist teachers into one SD3.5 Medium student via teacher extrapolation and reward-guided student self-extrapolation.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models">
-  <meta property="og:description" content="One diffusion model for composition, text rendering, and visual quality. Explore same-noise comparisons from the paper.">
+  <meta property="og:description" content="One SD3.5 Medium student surpassing specialist teachers and multi-teacher OPD baselines on GenEval, OCR, and DrawBench Aesthetic.">
   <meta property="og:image" content="https://sjtu-deng-lab.github.io/DexOPD/assets/preview.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#101719">
-  <link rel="preload" as="image" href="assets/gallery-teaser-47.webp">
+  <link rel="preload" as="image" href="assets/hero-mosaic.webp">
   <link rel="stylesheet" href="styles.css">
-  <script defer src="examples.js"></script>
   <script defer src="assets/method-trajectories.js"></script>
+  <script defer src="results-data.js"></script>
+  <script defer src="charts.js"></script>
   <script defer src="site.js"></script>
 </head>
 <body id="top">
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-arrow-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
     <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol>
     <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
-    <symbol id="i-columns" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></symbol>
-    <symbol id="i-wipe" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="m16 16 4-4-4-4"/><path d="m8 8-4 4 4 4"/></symbol>
-    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
-    <symbol id="i-chevrons" viewBox="0 0 24 24"><path d="m9 7-5 5 5 5"/><path d="m15 7 5 5-5 5"/></symbol>
   </svg>
-  <template id="zoom-icon"><span class="zoom-icon" aria-hidden="true"><svg class="icon"><use href="#i-expand"/></svg></span></template>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <div class="container site-nav">
       <a class="wordmark" href="#top"><span class="wordmark-dot" aria-hidden="true"></span>DexOPD</a>
-      <nav aria-label="Main navigation">
-        <a href="#demo">Demo</a>
+      <nav aria-label="Main navigation" id="primary-nav">
         <a href="#method">Method</a>
         <a href="#results">Results</a>
-        <a href="#run">Run DexOPD</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#run">Run</a>
+        <a href="examples.html">Examples</a>
       </nav>
       <a class="code-link" href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
     </div>
@@ -47,112 +45,55 @@
 
   <main id="main">
     <section class="hero" aria-labelledby="title">
-      <div class="container hero-layout">
-        <div class="hero-content">
-          <h1 id="title">DexOPD</h1>
-          <p class="paper-title">Dual-Extrapolation On-Policy<br class="desktop-break"> Distillation for Diffusion Models</p>
-          <p class="hero-summary">One SD3.5 Medium student for composition, text rendering, and visual quality.</p>
-          <p class="authors">Yunchao Ke<sup>1,2,*,&Dagger;</sup>, Yanzhe Hu<sup>1,*</sup>, Yi Yang<sup>1</sup>, Jiachun Jin<sup>1</sup>, Zhihong Liu<sup>1</sup>, Zhijie Deng<sup>1,&dagger;</sup></p>
-          <p class="affiliations"><sup>1</sup> Shanghai Jiao Tong University <span aria-hidden="true">&middot;</span> <sup>2</sup> Nankai University</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#demo">Explore the demo <svg class="icon" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
-            <a class="button hero-paper" href="assets/dexopd-paper.pdf"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg> Read paper</a>
-            <a class="button hero-paper" href="https://huggingface.co/kyc001/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Model weights</a>
-          </div>
+      <div class="container hero-single">
+        <p class="hero-kicker">On-Policy Distillation &middot; SD3.5-Medium</p>
+        <h1 id="title">DexOPD</h1>
+        <p class="paper-title">Dual-Extrapolation On-Policy<br class="desktop-break"> Distillation for Diffusion Models</p>
+        <p class="hero-summary">Consolidating three frozen specialist teachers into one unified SD3.5 Medium student&mdash;surpassing every specialist and multi-teacher OPD baseline across composition, text rendering, and visual quality.</p>
+        <p class="authors">Yunchao Ke<sup>1,2,*,&Dagger;</sup>, Yanzhe Hu<sup>1,*</sup>, Yi Yang<sup>1</sup>, Jiachun Jin<sup>1</sup>, Zhihong Liu<sup>1</sup>, Zhijie Deng<sup>1,&dagger;</sup></p>
+        <p class="affiliations"><sup>1</sup> Shanghai Jiao Tong University <span aria-hidden="true">&middot;</span> <sup>2</sup> Nankai University</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#method">Explore method <svg class="icon" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
+          <a class="button hero-paper" href="#results">Benchmark results</a>
+          <a class="button hero-paper" href="assets/dexopd-paper.pdf"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg> Paper PDF</a>
+          <a class="button hero-paper" href="https://huggingface.co/kyc001/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Model weights</a>
         </div>
-        <div class="hero-samples" role="group" aria-label="Images generated by the DexOPD student">
-          <img src="assets/gallery-teaser-47.webp" width="1024" height="1024" fetchpriority="high" alt="A lighthouse on a rocky coast under a cloud-filled sky.">
-          <img src="assets/hero-open-24-hours.webp" width="520" height="520" alt="A convenience store with a neon sign reading Open 24 Hours.">
-          <img src="assets/gallery-geneval-006.webp" width="1024" height="1024" alt="A purple computer keyboard next to a red chair.">
-        </div>
+        <p class="hero-secondary-link">Looking for generated image comparisons? <a href="examples.html">Open the dedicated qualitative examples page <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a></p>
       </div>
     </section>
 
-    <div class="score-band">
-      <div class="container score-grid">
-        <div class="score"><strong>0.9736</strong><span>GenEval reward<small>Compositional alignment</small></span></div>
-        <div class="score"><strong>0.9515</strong><span>OCR score<small>Text rendering</small></span></div>
-        <div class="score"><strong>6.4875</strong><span>DrawBench Aesthetic<small>Visual quality</small></span></div>
+    <div class="score-band" aria-label="Headline benchmark metrics">
+      <div class="container score-grid cols-4">
+        <div class="score">
+          <strong>0.9736</strong>
+          <span>GenEval reward<small>+0.0114 over DreOPD</small></span>
+        </div>
+        <div class="score">
+          <strong>0.9515</strong>
+          <span>OCR score<small>+0.0080 over OCR Teacher</small></span>
+        </div>
+        <div class="score">
+          <strong>6.4875</strong>
+          <span>DrawBench Aesthetic<small>+0.2062 over STEP-OPD*</small></span>
+        </div>
+        <div class="score">
+          <strong>25.59 s</strong>
+          <span>Small-batch / update<small>Matches DiffusionOPD, beats all OPD</small></span>
+        </div>
       </div>
     </div>
-
-    <section class="section demo-section" id="demo" aria-labelledby="demo-title">
-      <div class="container">
-        <div class="section-heading">
-          <h2 id="demo-title">Compare model outputs</h2>
-          <p>Pre-generated results for six paper prompts, compared with the same initial noise for each prompt.</p>
-        </div>
-        <noscript><p>The interactive comparison requires JavaScript. The images also appear in the <a href="assets/dexopd-paper.pdf">paper PDF</a>.</p></noscript>
-        <div id="comparison" class="comparison" hidden>
-          <aside class="prompt-panel" aria-labelledby="prompt-list-title">
-            <h3 id="prompt-list-title">Prompts</h3>
-            <div id="prompt-list" class="prompt-list" role="group" aria-labelledby="prompt-list-title"></div>
-          </aside>
-          <div class="compare-stage">
-            <div class="prompt-display" aria-live="polite">
-              <p class="category" id="compare-category"></p>
-              <blockquote id="compare-prompt"></blockquote>
-            </div>
-            <div class="compare-toolbar">
-              <label for="baseline">Compare with</label>
-              <select id="baseline">
-                <option value="dreopd">DreOPD</option>
-                <option value="diffusionopd">DiffusionOPD</option>
-                <option value="geneval">GenEval Teacher</option>
-                <option value="ocr">OCR Teacher</option>
-                <option value="aesthetic">Aesthetic Teacher</option>
-              </select>
-              <div class="segmented view-controls" role="group" aria-label="Comparison view">
-                <button id="side-mode" type="button" aria-pressed="true" aria-label="Side by side" title="Side by side"><svg class="icon" aria-hidden="true"><use href="#i-columns"/></svg></button>
-                <button id="wipe-mode" type="button" aria-pressed="false" aria-label="Image wipe" title="Image wipe"><svg class="icon" aria-hidden="true"><use href="#i-wipe"/></svg></button>
-              </div>
-            </div>
-            <div id="side-view" class="image-pair">
-              <figure class="comparison-image" id="baseline-figure"></figure>
-              <figure class="comparison-image dex-image" id="dex-figure"></figure>
-            </div>
-            <div id="wipe-view" hidden>
-              <div class="wipe-labels" aria-hidden="true"><span id="wipe-baseline-name"></span><strong>DexOPD</strong></div>
-              <div class="wipe-stage">
-                <img id="wipe-baseline-image" width="1024" height="1024" alt="">
-                <img id="wipe-dex-image" class="wipe-top" width="1024" height="1024" alt="">
-                <span class="wipe-divider" aria-hidden="true"><span><svg class="icon"><use href="#i-chevrons"/></svg></span></span>
-                <input class="wipe-input" id="wipe-position" type="range" min="0" max="100" value="50" aria-label="Baseline image reveal percentage">
-              </div>
-            </div>
-            <p id="compare-settings" class="image-settings"></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section gallery-section" id="gallery" aria-labelledby="gallery-title">
-      <div class="container">
-        <div class="section-heading">
-          <h2 id="gallery-title">One student, three capabilities</h2>
-          <p>Selected outputs from the same DexOPD checkpoint.</p>
-        </div>
-        <div id="gallery-tabs" class="segmented gallery-tabs" role="tablist" aria-label="Gallery categories" hidden>
-          <button type="button" id="tab-composition" role="tab" aria-controls="gallery-composition" aria-selected="true" data-category="composition">Composition</button>
-          <button type="button" id="tab-text" role="tab" aria-controls="gallery-text" aria-selected="false" tabindex="-1" data-category="text">Text rendering</button>
-          <button type="button" id="tab-aesthetic" role="tab" aria-controls="gallery-aesthetic" aria-selected="false" tabindex="-1" data-category="aesthetic">Aesthetics</button>
-        </div>
-        <div id="gallery-composition" class="gallery-grid" role="tabpanel" aria-labelledby="tab-composition" hidden></div>
-        <div id="gallery-text" class="gallery-grid" role="tabpanel" aria-labelledby="tab-text" hidden></div>
-        <div id="gallery-aesthetic" class="gallery-grid" role="tabpanel" aria-labelledby="tab-aesthetic" hidden></div>
-      </div>
-    </section>
 
     <section class="section method-section" id="method" aria-labelledby="method-title">
       <div class="container">
         <div class="section-heading">
+          <p class="section-kicker">Method</p>
           <h2 id="method-title">Dual extrapolation</h2>
-          <p>A frozen specialist supplies one training target. The student's own recent history supplies a second signal when candidates from the same noise earn different rewards.</p>
+          <p>A frozen specialist supplies one extrapolated distillation target. The student's own recent history supplies a second reward-guided signal whenever candidates from shared noise earn different scores.</p>
         </div>
         <div class="method-tabs" id="method-tabs" role="tablist" aria-label="Training stages" hidden>
-          <button type="button" role="tab" id="step-teacher" aria-controls="method-teacher" aria-selected="true">Teacher target</button>
-          <button type="button" role="tab" id="step-candidates" aria-controls="method-candidates" aria-selected="false" tabindex="-1">Student candidates</button>
-          <button type="button" role="tab" id="step-rewards" aria-controls="method-rewards" aria-selected="false" tabindex="-1">Reward feedback</button>
+          <button type="button" role="tab" id="step-teacher" aria-controls="method-teacher" aria-selected="true">01 &middot; Teacher target</button>
+          <button type="button" role="tab" id="step-candidates" aria-controls="method-candidates" aria-selected="false" tabindex="-1">02 &middot; Student candidates</button>
+          <button type="button" role="tab" id="step-rewards" aria-controls="method-rewards" aria-selected="false" tabindex="-1">03 &middot; Reward feedback</button>
         </div>
         <div class="method-scene" id="method-teacher" role="tabpanel" aria-labelledby="teacher-heading">
           <figure class="latent-sheet">
@@ -202,11 +143,11 @@
             <p class="method-detail">On a native step, the auxiliary target shifts along <i>G</i>. The teacher and active auxiliary losses jointly update the student.</p>
           </div>
         </div>
-        <p class="method-inference"><strong>At inference</strong> the trained student follows a single trajectory in the standard SD3.5 Medium pipeline.</p>
+        <p class="method-inference"><strong>At inference</strong> the trained student follows a single trajectory in the standard SD3.5 Medium pipeline with zero extra sampling overhead.</p>
         <figure class="method-activity" aria-labelledby="activity-title">
           <figcaption class="method-activity-caption">
             <h3 id="activity-title">When does the reward signal contribute?</h3>
-            <p>A group activates the auxiliary update when at least two of its four rewards differ and the RMS of the endpoint&ndash;reward covariance exceeds 10<sup>&minus;8</sup>. The teacher supplies a target for every group.</p>
+            <p>A group activates the auxiliary update when at least two of its four rewards differ and the RMS of the endpoint&ndash;reward covariance exceeds 10<sup>&minus;8</sup>. The extrapolated teacher supplies a target for every group.</p>
             <a href="assets/dexopd-paper.pdf#page=18">Training diagnostics in the paper</a>
           </figcaption>
           <div class="method-activity-chart">
@@ -220,7 +161,7 @@
           </div>
         </figure>
         <details class="paper-overview">
-          <summary>Training algorithm in the paper</summary>
+          <summary>Full training diagram from the paper</summary>
           <figure class="method-figure">
             <img src="assets/method.png" width="2400" height="901" loading="lazy" decoding="async" alt="Full paper overview of teacher extrapolation, historical self-extrapolation, and the joint training update.">
           </figure>
@@ -231,58 +172,302 @@
     <section class="section results-section" id="results" aria-labelledby="results-title">
       <div class="container">
         <div class="section-heading">
-          <h2 id="results-title">Benchmark results</h2>
-          <p>After 1,000 updates, one DexOPD checkpoint leads all three primary metrics in the paper's main comparison. The evaluation uses 512 &times; 512 images and 40 inference steps.</p>
+          <p class="section-kicker">Quantitative Results</p>
+          <h2 id="results-title">Benchmark performance &amp; learning dynamics</h2>
+          <p>After 1,000 updates, one unified DexOPD checkpoint surpasses all three specialist teachers, every multi-task RL baseline, and all competing multi-teacher OPD methods across all three primary objectives (512 &times; 512, 40 steps).</p>
         </div>
-        <dl class="benchmark-gains" aria-label="Gains over the next-best result in Table 1">
-          <div><dt>GenEval reward</dt><dd><strong>+0.0114</strong> <span>over DreOPD</span></dd></div>
-          <div><dt>OCR</dt><dd><strong>+0.0080</strong> <span>over the OCR teacher</span></dd></div>
-          <div><dt>DrawBench Aesthetic</dt><dd><strong>+0.2062</strong> <span>over STEP-OPD*</span></dd></div>
-        </dl>
-        <div class="table-scroll" role="region" aria-label="Primary benchmark comparison" tabindex="0">
-          <table>
-            <caption class="screen-reader">Primary benchmark scores. Higher is better in each column.</caption>
-            <thead><tr><th scope="col">Model</th><th scope="col">GenEval reward</th><th scope="col">OCR</th><th scope="col">DrawBench Aesthetic</th></tr></thead>
-            <tbody>
-              <tr class="group-row"><th scope="rowgroup" colspan="4">Base model</th></tr>
-              <tr><th scope="row">SD3.5-Medium</th><td>0.6446</td><td>0.5486</td><td>5.3899</td></tr>
-            </tbody>
-            <tbody>
-              <tr class="group-row"><th scope="rowgroup" colspan="4">Single-task specialists</th></tr>
-              <tr><th scope="row">GenEval Teacher</th><td>0.9534</td><td>0.6515</td><td>5.2635</td></tr>
-              <tr><th scope="row">OCR Teacher</th><td>0.6617</td><td>0.9435</td><td>5.2605</td></tr>
-              <tr><th scope="row">Aesthetic Teacher</th><td>0.4791</td><td>0.5881</td><td>6.2162</td></tr>
-            </tbody>
-            <tbody>
-              <tr class="group-row"><th scope="rowgroup" colspan="4">Multi-task reinforcement learning</th></tr>
-              <tr><th scope="row">GRPO-Guard</th><td>0.7202</td><td>0.7210</td><td>5.6812</td></tr>
-              <tr><th scope="row">DiffusionNFT</th><td>0.7029</td><td>0.9434</td><td>5.3674</td></tr>
-              <tr><th scope="row">DiffusionART</th><td>0.4427</td><td>0.9033</td><td>5.6673</td></tr>
-            </tbody>
-            <tbody>
-              <tr class="group-row"><th scope="rowgroup" colspan="4">Multi-teacher on-policy distillation</th></tr>
-              <tr><th scope="row">DiffusionOPD</th><td>0.9543</td><td>0.9371</td><td>6.1820</td></tr>
-              <tr><th scope="row">DreOPD</th><td>0.9622</td><td>0.9354</td><td>6.2182</td></tr>
-              <tr><th scope="row">STEP-OPD*</th><td>0.9562</td><td>0.9378</td><td>6.2813</td></tr>
-              <tr class="ours"><th scope="row">DexOPD (ours)</th><td>0.9736</td><td>0.9515</td><td>6.4875</td></tr>
-            </tbody>
-          </table>
+
+        <div class="charts-pair">
+          <article class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <h3>Surpassing specialist &amp; proxy teachers</h3>
+                <p>GenEval reward over 1,000 updates. Hover or click any step to inspect exact scores.</p>
+              </div>
+              <div class="segmented" role="group" aria-label="GenEval curve zoom">
+                <button type="button" id="geneval-view-full" aria-pressed="true">0&ndash;1,000</button>
+                <button type="button" id="geneval-view-zoom" aria-pressed="false">500&ndash;1,000</button>
+              </div>
+            </div>
+            <div id="chart-geneval-opd" class="chart-canvas"></div>
+            <div id="geneval-opd-readout" class="chart-readout" aria-live="polite"></div>
+          </article>
+
+          <article class="chart-card">
+            <div class="chart-card-head">
+              <div>
+                <h3>Three-task training stability</h3>
+                <p id="multitask-summary">Steady progress across all three tasks over 1,000 updates.</p>
+              </div>
+              <div class="segmented" id="multitask-tabs" role="group" aria-label="Select model learning curve">
+                <button type="button" data-model="dexopd" aria-pressed="true">DexOPD</button>
+                <button type="button" data-model="nft" aria-pressed="false">DiffusionNFT</button>
+                <button type="button" data-model="art" aria-pressed="false">DiffusionART</button>
+              </div>
+            </div>
+            <div id="chart-multitask-stability" class="chart-canvas"></div>
+            <div id="multitask-readout" class="chart-readout" aria-live="polite"></div>
+          </article>
         </div>
-        <p class="table-note">Higher is better for each metric. * Paper-based reproduction. See <a href="assets/dexopd-paper.pdf">Table 1 in the paper</a> for the full metrics.</p>
+
+        <article class="chart-card matrix-card">
+          <div class="chart-card-head">
+            <div>
+              <h3>Three-objective overview across all 11 models</h3>
+              <p>Single-task teachers peak on one column while dropping sharply on the others. DexOPD leads all three columns simultaneously in one adapter.</p>
+            </div>
+            <div class="matrix-legend" aria-hidden="true">
+              <span><i class="swatch-ours"></i>DexOPD</span>
+              <span><i class="swatch-specialist"></i>Specialist target</span>
+              <span><i class="swatch-opd"></i>OPD baselines</span>
+            </div>
+          </div>
+          <div id="chart-primary-matrix"></div>
+        </article>
+
+        <div class="table-block">
+          <div class="table-header-bar">
+            <div>
+              <h3>Table 1 &middot; Complete 14-metric benchmark</h3>
+              <p>All 11 models and 154 scores from the paper's main comparison after 1,000 updates.</p>
+            </div>
+            <div class="segmented" id="table-filter-controls" role="group" aria-label="Filter benchmark columns" hidden>
+              <button type="button" data-view="all" aria-pressed="true">All 14 metrics</button>
+              <button type="button" data-view="geneval" aria-pressed="false">GenEval (8)</button>
+              <button type="button" data-view="drawbench" aria-pressed="false">OCR &amp; DrawBench (6)</button>
+            </div>
+          </div>
+          <div class="table-scroll" role="region" aria-label="Table 1, multi-task benchmark results" tabindex="0">
+            <table class="benchmark-table" id="main-benchmark-table" data-view="all" aria-describedby="benchmark-key">
+              <caption class="screen-reader">Table 1. Multi-task generation performance after 1,000 updates.</caption>
+              <colgroup span="1"></colgroup><colgroup span="8"></colgroup><colgroup span="1"></colgroup><colgroup span="5"></colgroup>
+              <thead>
+                <tr>
+                  <th scope="col" rowspan="2">Model</th>
+                  <th scope="colgroup" colspan="8" class="col-ge">GenEval</th>
+                  <th scope="col" rowspan="2" class="col-db col-sep">OCR</th>
+                  <th scope="colgroup" colspan="5" class="col-db col-sep">DrawBench</th>
+                </tr>
+                <tr>
+                  <th scope="col" class="col-ge">Single</th>
+                  <th scope="col" class="col-ge">Two</th>
+                  <th scope="col" class="col-ge">Count</th>
+                  <th scope="col" class="col-ge">Colors</th>
+                  <th scope="col" class="col-ge">Position</th>
+                  <th scope="col" class="col-ge"><abbr title="Color attribution">Attr.</abbr></th>
+                  <th scope="col" class="col-ge"><abbr title="Overall accuracy">Acc.</abbr></th>
+                  <th scope="col" class="col-ge">Reward</th>
+                  <th scope="col" class="col-db col-sep">Aesthetic</th>
+                  <th scope="col" class="col-db">PickScore</th>
+                  <th scope="col" class="col-db">ImageReward</th>
+                  <th scope="col" class="col-db">CLIPScore</th>
+                  <th scope="col" class="col-db">HPSv2.1</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row"><th scope="rowgroup" colspan="15"><span>Base model</span></th></tr>
+                <tr>
+                  <th scope="row">SD3.5-Medium</th>
+                  <td class="col-ge">0.9844</td><td class="col-ge">0.7702</td><td class="col-ge">0.5714</td><td class="col-ge">0.8112</td><td class="col-ge">0.2200</td><td class="col-ge">0.5149</td><td class="col-ge">0.6336</td><td class="col-ge">0.6446</td>
+                  <td class="col-db col-sep">0.5486</td><td class="col-db col-sep">5.3899</td><td class="col-db">0.8614</td><td class="col-db">0.8383</td><td class="col-db">0.2895</td><td class="col-db">0.2924</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr class="group-row"><th scope="rowgroup" colspan="15"><span>Single-task specialist teachers</span></th></tr>
+                <tr>
+                  <th scope="row">GenEval Teacher</th>
+                  <td class="col-ge"><strong>1.0000</strong></td><td class="col-ge">0.9848</td><td class="col-ge">0.9250</td><td class="col-ge"><u>0.9069</u></td><td class="col-ge"><strong>0.9750</strong></td><td class="col-ge">0.8275</td><td class="col-ge">0.9349</td><td class="col-ge">0.9534</td>
+                  <td class="col-db col-sep">0.6515</td><td class="col-db col-sep">5.2635</td><td class="col-db">0.8513</td><td class="col-db">0.9277</td><td class="col-db">0.2869</td><td class="col-db">0.2673</td>
+                </tr>
+                <tr>
+                  <th scope="row">OCR Teacher</th>
+                  <td class="col-ge">0.9719</td><td class="col-ge">0.7172</td><td class="col-ge">0.6000</td><td class="col-ge">0.7819</td><td class="col-ge">0.2225</td><td class="col-ge">0.4725</td><td class="col-ge">0.6144</td><td class="col-ge">0.6617</td>
+                  <td class="col-db col-sep"><u>0.9435</u></td><td class="col-db col-sep">5.2605</td><td class="col-db">0.8580</td><td class="col-db">0.8972</td><td class="col-db">0.2909</td><td class="col-db">0.2732</td>
+                </tr>
+                <tr>
+                  <th scope="row">Aesthetic Teacher</th>
+                  <td class="col-ge">0.9719</td><td class="col-ge">0.8864</td><td class="col-ge">0.6063</td><td class="col-ge">0.8670</td><td class="col-ge">0.2950</td><td class="col-ge">0.6575</td><td class="col-ge">0.7066</td><td class="col-ge">0.4791</td>
+                  <td class="col-db col-sep">0.5881</td><td class="col-db col-sep">6.2162</td><td class="col-db">0.9233</td><td class="col-db">1.5016</td><td class="col-db">0.2960</td><td class="col-db">0.3452</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr class="group-row"><th scope="rowgroup" colspan="15"><span>Multi-task reinforcement learning</span></th></tr>
+                <tr>
+                  <th scope="row">GRPO-Guard</th>
+                  <td class="col-ge"><u>0.9875</u></td><td class="col-ge">0.8460</td><td class="col-ge">0.7640</td><td class="col-ge">0.7846</td><td class="col-ge">0.2475</td><td class="col-ge">0.5174</td><td class="col-ge">0.6764</td><td class="col-ge">0.7202</td>
+                  <td class="col-db col-sep">0.7210</td><td class="col-db col-sep">5.6812</td><td class="col-db">0.8770</td><td class="col-db">1.1531</td><td class="col-db">0.2904</td><td class="col-db">0.3091</td>
+                </tr>
+                <tr>
+                  <th scope="row">DiffusionNFT</th>
+                  <td class="col-ge">0.8844</td><td class="col-ge">0.6212</td><td class="col-ge">0.6429</td><td class="col-ge">0.7340</td><td class="col-ge">0.2450</td><td class="col-ge">0.4453</td><td class="col-ge">0.5817</td><td class="col-ge">0.7029</td>
+                  <td class="col-db col-sep">0.9434</td><td class="col-db col-sep">5.3674</td><td class="col-db">0.8412</td><td class="col-db">0.6314</td><td class="col-db">0.2787</td><td class="col-db">0.2642</td>
+                </tr>
+                <tr>
+                  <th scope="row">DiffusionART</th>
+                  <td class="col-ge">0.8406</td><td class="col-ge">0.5707</td><td class="col-ge">0.5497</td><td class="col-ge">0.5665</td><td class="col-ge">0.1900</td><td class="col-ge">0.2811</td><td class="col-ge">0.4847</td><td class="col-ge">0.4427</td>
+                  <td class="col-db col-sep">0.9033</td><td class="col-db col-sep">5.6673</td><td class="col-db">0.8292</td><td class="col-db">0.7193</td><td class="col-db">0.2710</td><td class="col-db">0.2653</td>
+                </tr>
+              </tbody>
+              <tbody>
+                <tr class="group-row"><th scope="rowgroup" colspan="15"><span>Multi-teacher on-policy distillation</span></th></tr>
+                <tr>
+                  <th scope="row">DiffusionOPD</th>
+                  <td class="col-ge"><strong>1.0000</strong></td><td class="col-ge">0.9924</td><td class="col-ge">0.9472</td><td class="col-ge">0.8936</td><td class="col-ge">0.9650</td><td class="col-ge">0.8383</td><td class="col-ge">0.9373</td><td class="col-ge">0.9543</td>
+                  <td class="col-db col-sep">0.9371</td><td class="col-db col-sep">6.1820</td><td class="col-db"><u>0.9237</u></td><td class="col-db">1.5110</td><td class="col-db"><strong>0.3006</strong></td><td class="col-db">0.3547</td>
+                </tr>
+                <tr>
+                  <th scope="row">DreOPD</th>
+                  <td class="col-ge"><strong>1.0000</strong></td><td class="col-ge">0.9899</td><td class="col-ge"><u>0.9627</u></td><td class="col-ge"><u>0.9069</u></td><td class="col-ge"><u>0.9725</u></td><td class="col-ge"><strong>0.8756</strong></td><td class="col-ge"><u>0.9495</u></td><td class="col-ge"><u>0.9622</u></td>
+                  <td class="col-db col-sep">0.9354</td><td class="col-db col-sep">6.2182</td><td class="col-db"><u>0.9237</u></td><td class="col-db"><strong>1.5259</strong></td><td class="col-db"><u>0.2986</u></td><td class="col-db"><u>0.3558</u></td>
+                </tr>
+                <tr>
+                  <th scope="row">STEP-OPD*</th>
+                  <td class="col-ge"><strong>1.0000</strong></td><td class="col-ge"><u>0.9949</u></td><td class="col-ge">0.9379</td><td class="col-ge">0.8989</td><td class="col-ge"><strong>0.9750</strong></td><td class="col-ge">0.8657</td><td class="col-ge">0.9440</td><td class="col-ge">0.9562</td>
+                  <td class="col-db col-sep">0.9378</td><td class="col-db col-sep"><u>6.2813</u></td><td class="col-db"><strong>0.9248</strong></td><td class="col-db"><u>1.5207</u></td><td class="col-db">0.2985</td><td class="col-db"><strong>0.3566</strong></td>
+                </tr>
+                <tr class="ours">
+                  <th scope="row">DexOPD (ours)</th>
+                  <td class="col-ge"><strong>1.0000</strong></td><td class="col-ge"><strong>1.0000</strong></td><td class="col-ge"><strong>0.9688</strong></td><td class="col-ge"><strong>0.9548</strong></td><td class="col-ge">0.9525</td><td class="col-ge"><u>0.8750</u></td><td class="col-ge"><strong>0.9566</strong></td><td class="col-ge"><strong>0.9736</strong></td>
+                  <td class="col-db col-sep"><strong>0.9515</strong></td><td class="col-db col-sep"><strong>6.4875</strong></td><td class="col-db">0.9190</td><td class="col-db">1.5127</td><td class="col-db">0.2914</td><td class="col-db">0.3484</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" id="benchmark-key">Higher is better. <strong>Bold</strong> marks the best score and <u>underline</u> the second-best, including ties. GenEval reports accuracy for six categories, overall accuracy (Acc.), and dense reward. * Paper-based reproduction. <a href="assets/dexopd-paper.pdf">Table 1 in the paper</a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section analysis-section" id="analysis" aria-labelledby="analysis-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Ablations &amp; Diagnostics</p>
+          <h2 id="analysis-title">Why dual extrapolation works</h2>
+          <p>Controlled ablations isolate teacher extrapolation, reward-guided student self-extrapolation, evolving historical referencing, and compute efficiency under the same 1,000-update budget.</p>
+        </div>
+
+        <article class="analysis-card">
+          <div class="chart-card-head">
+            <div>
+              <p class="card-index">01 &middot; Component ablation</p>
+              <h3>Every component contributes across all three tasks</h3>
+              <p>Removing teacher extrapolation (&lambda;=0), dropping the student auxiliary branch (&beta;=0), or anchoring to the frozen base (<i>H</i><sub>r</sub>=<i>B</i>) degrades every primary metric.</p>
+            </div>
+            <div class="segmented" role="group" aria-label="Ablation metric subset">
+              <button type="button" id="ablation-primary" aria-pressed="true">Primary 3</button>
+              <button type="button" id="ablation-secondary" aria-pressed="false">Secondary 4</button>
+            </div>
+          </div>
+          <div id="chart-ablation"></div>
+        </article>
+
+        <article class="analysis-card">
+          <div class="chart-card-head">
+            <div>
+              <p class="card-index">02 &middot; Auxiliary-weight sensitivity (<span class="math-symbol">&beta;</span> sweep)</p>
+              <h3>Balancing three tasks across 11 auxiliary weights</h3>
+              <p>With &lambda; = 1.2 fixed, &beta; = 1.8 attains peak DrawBench Aesthetic (6.4875) while staying within 0.0007 of the GenEval peak and 0.0005 of the OCR peak. Hover or click any &beta; to inspect all 7 metrics.</p>
+            </div>
+          </div>
+          <div id="chart-beta-sweep"></div>
+          <div id="beta-sweep-readout" class="sweep-readout" aria-live="polite"></div>
+        </article>
+
+        <article class="analysis-card">
+          <div class="chart-card-head">
+            <div>
+              <p class="card-index">03 &middot; Inference-time teacher extrapolation (<span class="math-symbol">&lambda;</span> trade-off)</p>
+              <h3>Why standalone teacher extrapolation cannot replace distillation</h3>
+              <p>Extrapolating a frozen specialist boosts its own target near &lambda; &isin; [0.8, 1.4], but causes severe cross-task collapse at larger &lambda;. Distilling at &lambda; = 1.2 harvests strong targets without sacrificing off-task quality.</p>
+            </div>
+            <div class="segmented" id="teacher-tabs" role="group" aria-label="Select specialist teacher">
+              <button type="button" data-teacher="aesthetic" aria-pressed="true">Aesthetic Teacher</button>
+              <button type="button" data-teacher="ocr" aria-pressed="false">OCR Teacher</button>
+              <button type="button" data-teacher="geneval" aria-pressed="false">GenEval Teacher</button>
+            </div>
+          </div>
+          <div id="chart-teacher-sweep"></div>
+          <div id="teacher-sweep-readout" class="sweep-readout" aria-live="polite"></div>
+        </article>
+
+        <article class="efficiency-card" aria-labelledby="efficiency-title">
+          <div class="efficiency-intro">
+            <p class="card-index light">04 &middot; Wall-clock compute efficiency</p>
+            <h3 id="efficiency-title">Small-batch DexOPD matches DiffusionOPD speed while leading all three metrics</h3>
+            <p>Measured on 8 &times; NVIDIA H20 GPUs over 1,000 updates. Reducing native batch size from 72 to 24 cuts update time to <strong>25.59 s</strong>&mdash;matching standard single-trajectory DiffusionOPD (25.76 s) and outperforming STEP-OPD* (32.53 s) in both speed and every primary score.</p>
+          </div>
+          <div class="efficiency-grid">
+            <div class="eff-item eff-featured">
+              <div class="eff-head"><strong>DexOPD (small batch)</strong><span>Batch 24</span></div>
+              <p class="eff-time">25.59 <small>s / update</small></p>
+              <p class="eff-scores">GenEval <b>0.9680</b> &middot; OCR <b>0.9488</b> &middot; Aes <b>6.4857</b></p>
+            </div>
+            <div class="eff-item">
+              <div class="eff-head"><strong>DexOPD (default)</strong><span>Batch 72</span></div>
+              <p class="eff-time">68.18 <small>s / update</small></p>
+              <p class="eff-scores">GenEval <b>0.9736</b> &middot; OCR <b>0.9515</b> &middot; Aes <b>6.4875</b></p>
+            </div>
+            <div class="eff-item">
+              <div class="eff-head"><strong>DiffusionOPD</strong><span>Batch 72</span></div>
+              <p class="eff-time">25.76 <small>s / update</small></p>
+              <p class="eff-scores">GenEval 0.9543 &middot; OCR 0.9371 &middot; Aes 6.1820</p>
+            </div>
+            <div class="eff-item">
+              <div class="eff-head"><strong>STEP-OPD*</strong><span>Batch 72</span></div>
+              <p class="eff-time">32.53 <small>s / update</small></p>
+              <p class="eff-scores">GenEval 0.9562 &middot; OCR 0.9378 &middot; Aes 6.2813</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="examples-callout" aria-labelledby="examples-callout-title">
+      <div class="container examples-callout-inner">
+        <div>
+          <h2 id="examples-callout-title">Qualitative comparisons &amp; gallery</h2>
+          <p>Inspect same-noise comparisons across six paper prompts (side-by-side and wipe slider) and 18 multi-capability outputs on a separate page.</p>
+        </div>
+        <a class="button callout-btn" href="examples.html">Open qualitative examples <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
       </div>
     </section>
 
     <section class="section run-section" id="run" aria-labelledby="run-title">
       <div class="container">
         <div class="section-heading">
+          <p class="section-kicker">Checkpoint &amp; Inference</p>
           <h2 id="run-title">Run DexOPD</h2>
-          <p>The release contains the rank-32 EMA LoRA from update 1,000. Load it into the transformer of Stable Diffusion 3.5 Medium.</p>
+          <p>The public release contains the rank-32 EMA LoRA from update 1,000. Attach it to the transformer of Stable Diffusion 3.5 Medium for standard single-trajectory inference.</p>
         </div>
         <ol class="run-steps">
-          <li><h3>Get base model access</h3><p>Request access to Stable Diffusion 3.5 Medium and sign in with that Hugging Face account.</p><a href="https://huggingface.co/stabilityai/stable-diffusion-3.5-medium">Open the base model <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
-          <li><h3>Load the DexOPD adapter</h3><p>The public Hugging Face repository hosts the adapter weights and PEFT configuration.</p><a href="https://huggingface.co/kyc001/DexOPD">View release files <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
-          <li><h3>Generate an image</h3><p>Run the CUDA example at 512 &times; 512, with 40 steps and a guidance scale of 4.5.</p><a href="https://github.com/SJTU-DENG-Lab/DexOPD/blob/main/MODEL_CARD.md#generate-an-image">Open the Python example <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+          <li><h3>1. Get base model access</h3><p>Request access to Stable Diffusion 3.5 Medium and sign in with that Hugging Face account.</p><a href="https://huggingface.co/stabilityai/stable-diffusion-3.5-medium">Open the base model <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+          <li><h3>2. Load the DexOPD adapter</h3><p>The public Hugging Face repository hosts the PEFT LoRA weights and configuration.</p><a href="https://huggingface.co/kyc001/DexOPD">View Hugging Face repo <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+          <li><h3>3. Generate an image</h3><p>Run the CUDA example at 512 &times; 512 (paper evaluation) or 1024 &times; 1024, 40 steps, CFG 4.5.</p><a href="https://github.com/SJTU-DENG-Lab/DexOPD/blob/main/MODEL_CARD.md#quick-start-cuda-inference">Full model card <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
         </ol>
+        <div class="code-card">
+          <div class="code-card-bar">
+            <span>Quick inference (Python &middot; Diffusers + PEFT)</span>
+            <button class="button copy-button compact" id="copy-snippet" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy snippet</span></button>
+          </div>
+          <pre><code id="snippet-code">import torch
+from diffusers import StableDiffusion3Pipeline
+from peft import PeftModel
+
+pipe = StableDiffusion3Pipeline.from_pretrained(
+    "stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16
+)
+pipe.transformer = PeftModel.from_pretrained(pipe.transformer, "kyc001/DexOPD")
+pipe.to("cuda")
+pipe.vae.to(dtype=torch.float32)
+
+with torch.inference_mode(), torch.autocast("cuda", dtype=torch.float16):
+    image = pipe(
+        'A shop window with a sign that reads "OPEN LATE"',
+        height=512, width=512, num_inference_steps=40, guidance_scale=4.5,
+        generator=torch.Generator(device="cuda").manual_seed(42),
+    ).images[0]
+image.save("dexopd.png")</code></pre>
+        </div>
       </div>
     </section>
 
@@ -304,18 +489,9 @@
 
   <footer>
     <div class="container footer-content">
-      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University <span aria-hidden="true">&middot;</span> <a href="#citation">Citation</a></p>
+      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University <span aria-hidden="true">&middot;</span> <a href="examples.html">Qualitative Examples</a> <span aria-hidden="true">&middot;</span> <a href="#citation">Citation</a></p>
       <p>* Equal contribution. &Dagger; Work done during an internship at Shanghai Jiao Tong University. &dagger; <a href="mailto:zhijied@sjtu.edu.cn">Corresponding author</a>.</p>
     </div>
   </footer>
-
-  <dialog id="lightbox" aria-labelledby="lightbox-title">
-    <div class="lightbox-bar">
-      <h2 id="lightbox-title"></h2>
-      <button class="icon-button" id="close-lightbox" type="button" aria-label="Close image" title="Close image" autofocus><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
-    </div>
-    <img id="lightbox-image" width="1024" height="1024" alt="">
-    <div class="lightbox-caption"><p id="lightbox-prompt"></p><p id="lightbox-settings" class="image-settings"></p></div>
-  </dialog>
 </body>
 </html>

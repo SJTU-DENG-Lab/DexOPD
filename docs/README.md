@@ -1,9 +1,11 @@
 # DexOPD project page
 
-Open `index.html` directly in a browser to preview the complete site. The demo
-uses pre-generated outputs from the paper, with prompts and generation settings
-in `examples.js`. The source outputs were generated at 1024 x 1024. The site
-serves WebP copies of those outputs.
+Open `index.html` directly in a browser to preview the overview, interactive
+method diagrams, and benchmark/analysis charts, or open `examples.html` for
+same-noise model comparisons and the multi-capability gallery. Prompts and
+generation settings live in `examples.js`, and benchmark/ablation numbers live
+in `results-data.js`. Source qualitative outputs were generated at 1024 x 1024
+and served as WebP copies.
 
 ## Publish with GitHub Pages
 
