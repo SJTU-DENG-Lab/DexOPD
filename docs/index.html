@@ -38,7 +38,7 @@
         <a href="#demo">Demo</a>
         <a href="#method">Method</a>
         <a href="#results">Results</a>
-        <a href="#citation">Citation</a>
+        <a href="#run">Run DexOPD</a>
       </nav>
       <a class="code-link" href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
     </div>
@@ -49,6 +49,7 @@
       <div class="container hero-content">
         <h1 id="title">DexOPD</h1>
         <p class="paper-title">Dual-Extrapolation On-Policy<br class="desktop-break"> Distillation for Diffusion Models</p>
+        <p class="hero-summary">One SD3.5 Medium student for composition, text rendering, and visual quality.</p>
         <p class="authors">Yunchao Ke<sup>1,2,*,&Dagger;</sup>, Yanzhe Hu<sup>1,*</sup>, Yi Yang<sup>1</sup>, Jiachun Jin<sup>1</sup>, Zhihong Liu<sup>1</sup>, Zhijie Deng<sup>1,&dagger;</sup></p>
         <p class="affiliations"><sup>1</sup> Shanghai Jiao Tong University <span aria-hidden="true">&middot;</span> <sup>2</sup> Nankai University</p>
         <div class="hero-actions">
@@ -138,15 +139,15 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="method-title">Dual extrapolation</h2>
-          <p>DexOPD distills three SD3.5-Medium specialists into a single student. Extrapolated teachers guide the student on its own trajectories, while reward feedback builds on the student's recent training progress.</p>
+          <p>DexOPD strengthens on-policy distillation in two ways. It extrapolates the specialist teachers to improve their targets and uses the student's recent progress to find new directions for training.</p>
         </div>
         <figure class="method-figure">
           <img src="assets/method.png" width="2400" height="901" loading="lazy" decoding="async" alt="Training diagram showing extrapolated teacher targets, candidate generation from the current and historical student, and a joint distillation update.">
         </figure>
         <div class="method-grid">
-          <div><h3>Teacher extrapolation</h3><p>For each task, extrapolate along the velocity difference between the frozen specialist and the base model to supervise native student states.</p></div>
-          <div><h3>Student self-extrapolation</h3><p>Use a historical EMA of the student to generate same-noise candidates. Pairwise reward differences define an auxiliary training direction.</p></div>
-          <div><h3>Standard inference</h3><p>The trained student samples a single trajectory with the standard SD3.5-Medium pipeline.</p></div>
+          <div><h3>Teacher extrapolation</h3><p>At states visited by the student, extend each specialist's velocity away from the frozen base model to construct a stronger target.</p></div>
+          <div><h3>Student self-extrapolation</h3><p>Compare the current student with its historical EMA and sample several extrapolation strengths from shared noise. Pairwise reward differences define an auxiliary training direction.</p></div>
+          <div><h3>Standard inference</h3><p>Load the released LoRA into SD3.5 Medium and sample a single trajectory using the usual text-to-image pipeline.</p></div>
         </div>
       </div>
     </section>
@@ -155,8 +156,13 @@
       <div class="container">
         <div class="section-heading">
           <h2 id="results-title">Benchmark results</h2>
-          <p>DexOPD leads the methods in the main comparison on GenEval reward, OCR, and DrawBench Aesthetic.</p>
+          <p>After 1,000 updates, one DexOPD checkpoint leads all three primary metrics in the paper's main comparison. The evaluation uses 512 &times; 512 images and 40 inference steps.</p>
         </div>
+        <dl class="benchmark-gains" aria-label="Gains over the next-best result in Table 1">
+          <div><dt>GenEval reward</dt><dd><strong>+0.0114</strong> <span>over DreOPD</span></dd></div>
+          <div><dt>OCR</dt><dd><strong>+0.0080</strong> <span>over the OCR teacher</span></dd></div>
+          <div><dt>DrawBench Aesthetic</dt><dd><strong>+0.2062</strong> <span>over STEP-OPD*</span></dd></div>
+        </dl>
         <div class="table-scroll" role="region" aria-label="Primary benchmark comparison" tabindex="0">
           <table>
             <caption class="screen-reader">Primary benchmark scores. Higher is better in each column.</caption>
@@ -190,6 +196,20 @@
       </div>
     </section>
 
+    <section class="section run-section" id="run" aria-labelledby="run-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="run-title">Run DexOPD</h2>
+          <p>The release contains the rank-32 EMA LoRA from update 1,000. Load it into the transformer of Stable Diffusion 3.5 Medium.</p>
+        </div>
+        <ol class="run-steps">
+          <li><h3>Get base model access</h3><p>Request access to Stable Diffusion 3.5 Medium and sign in with that Hugging Face account.</p><a href="https://huggingface.co/stabilityai/stable-diffusion-3.5-medium">Open the base model <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+          <li><h3>Load the DexOPD adapter</h3><p>The public Hugging Face repository hosts the adapter weights and PEFT configuration.</p><a href="https://huggingface.co/kyc001/DexOPD">View release files <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+          <li><h3>Generate an image</h3><p>Run the CUDA example at 512 &times; 512, with 40 steps and a guidance scale of 4.5.</p><a href="https://github.com/SJTU-DENG-Lab/DexOPD/blob/main/MODEL_CARD.md#generate-an-image">Open the Python example <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a></li>
+        </ol>
+      </div>
+    </section>
+
     <section class="section citation-section" id="citation" aria-labelledby="citation-title">
       <div class="container citation-layout">
         <div class="section-heading"><h2 id="citation-title">Citation</h2><p>Ke, Hu, Yang, Jin, Liu, and Deng, 2026.</p></div>
@@ -208,7 +228,7 @@
 
   <footer>
     <div class="container footer-content">
-      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University</p>
+      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University <span aria-hidden="true">&middot;</span> <a href="#citation">Citation</a></p>
       <p>* Equal contribution. &Dagger; Work done during an internship at Shanghai Jiao Tong University. &dagger; <a href="mailto:zhijied@sjtu.edu.cn">Corresponding author</a>.</p>
     </div>
   </footer>

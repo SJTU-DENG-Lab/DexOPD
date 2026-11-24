@@ -102,7 +102,8 @@ training checkpoint with `--resume` and the same model, recipe, and rank count.
 
 The [published DexOPD adapter](https://huggingface.co/kyc001/DexOPD) is the EMA
 LoRA used for the paper's main results at update 1,000. The base SD3.5 Medium
-model requires Hugging Face access as described in [Setup](#setup).
+model requires Hugging Face access as described in [Setup](#setup). See the
+[model card](MODEL_CARD.md) for checkpoint details and benchmark context.
 
 ```python
 import torch
