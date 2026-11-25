@@ -232,8 +232,8 @@ window.DEXOPD_EXAMPLES = {
   ],
   "gallery": [
     {
-      "name": "Purple keyboard, red chair",
-      "prompt": "a photo of a purple computer keyboard and a red chair",
+      "name": "Cow left of a stop sign",
+      "prompt": "a photo of a cow left of a stop sign",
       "seed": 42,
       "cfg": 4.5,
       "steps": 40,
@@ -241,12 +241,12 @@ window.DEXOPD_EXAMPLES = {
         1024,
         1024
       ],
-      "image": "gallery-geneval-006.webp",
+      "image": "gallery-geneval-120.webp",
       "category": "composition"
     },
     {
-      "name": "Four donuts",
-      "prompt": "a photo of four donuts",
+      "name": "Three buses",
+      "prompt": "a photo of three buses",
       "seed": 42,
       "cfg": 4.5,
       "steps": 40,
@@ -254,7 +254,7 @@ window.DEXOPD_EXAMPLES = {
         1024,
         1024
       ],
-      "image": "gallery-geneval-021.webp",
+      "image": "gallery-geneval-154.webp",
       "category": "composition"
     },
     {
@@ -271,8 +271,8 @@ window.DEXOPD_EXAMPLES = {
       "category": "composition"
     },
     {
-      "name": "Four stop signs",
-      "prompt": "a photo of four stop signs",
+      "name": "Person and a bear",
+      "prompt": "a photo of a person and a bear",
       "seed": 42,
       "cfg": 4.5,
       "steps": 40,
@@ -280,12 +280,12 @@ window.DEXOPD_EXAMPLES = {
         1024,
         1024
       ],
-      "image": "gallery-geneval-004.webp",
+      "image": "gallery-geneval-097.webp",
       "category": "composition"
     },
     {
-      "name": "Three birds",
-      "prompt": "a photo of three birds",
+      "name": "Green bus",
+      "prompt": "a photo of a green bus",
       "seed": 42,
       "cfg": 4.5,
       "steps": 40,
@@ -293,7 +293,7 @@ window.DEXOPD_EXAMPLES = {
         1024,
         1024
       ],
-      "image": "gallery-geneval-128.webp",
+      "image": "gallery-geneval-169.webp",
       "category": "composition"
     },
     {
