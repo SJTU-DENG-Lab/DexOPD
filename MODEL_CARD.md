@@ -11,6 +11,7 @@ tags:
 - text-to-image
 - stable-diffusion-3
 - on-policy-distillation
+- arxiv:2611.31969
 ---
 
 # DexOPD for Stable Diffusion 3.5 Medium
@@ -20,7 +21,7 @@ tags:
 **Authors:** Yunchao Ke\*, Yanzhe Hu\*, Yi Yang, Jiachun Jin, Zhihong Liu, Zhijie Deng†  
 Shanghai Jiao Tong University · Nankai University
 
-[Project page & interactive charts](https://sjtu-deng-lab.github.io/DexOPD/) · [Qualitative comparisons](https://sjtu-deng-lab.github.io/DexOPD/examples.html) · [Paper PDF](https://sjtu-deng-lab.github.io/DexOPD/assets/dexopd-paper.pdf) · [GitHub code](https://github.com/SJTU-DENG-Lab/DexOPD)
+[Project page & interactive charts](https://sjtu-deng-lab.github.io/DexOPD/) · [Qualitative comparisons](https://sjtu-deng-lab.github.io/DexOPD/examples.html) · [arXiv:2611.31969](https://arxiv.org/abs/2611.31969) · [Paper PDF](https://sjtu-deng-lab.github.io/DexOPD/assets/dexopd-paper.pdf) · [GitHub code](https://github.com/SJTU-DENG-Lab/DexOPD)
 
 ![DexOPD overview and multi-task benchmark summary](https://raw.githubusercontent.com/SJTU-DENG-Lab/DexOPD/main/assets/teaser.png)
 
@@ -130,8 +131,12 @@ All trained models share the SD3.5-Medium backbone and a 1,000-update budget, ev
 
 ```bibtex
 @misc{ke2026dexopd,
-  title  = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
-  author = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
-  year   = {2026}
+  title         = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
+  author        = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
+  year          = {2026},
+  eprint        = {2611.31969},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2611.31969}
 }
 ```

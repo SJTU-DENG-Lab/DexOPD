@@ -4,7 +4,8 @@
 
 \* Equal contribution. † Corresponding author.
 
-[![Paper](https://img.shields.io/badge/Paper-DexOPD-blue)](docs/assets/dexopd-paper.pdf)
+[![arXiv](https://img.shields.io/badge/arXiv-2611.31969-b31b1b)](https://arxiv.org/abs/2611.31969)
+[![Paper PDF](https://img.shields.io/badge/Paper-PDF-blue)](docs/assets/dexopd-paper.pdf)
 [![Project page](https://img.shields.io/badge/Project%20Page-Demo-397459)](https://sjtu-deng-lab.github.io/DexOPD/)
 [![Code](https://img.shields.io/badge/Code-GitHub-black)](https://github.com/SJTU-DENG-Lab/DexOPD)
 [![Hugging Face checkpoint](https://img.shields.io/badge/Hugging%20Face-DexOPD%20LoRA-ffcc33)](https://huggingface.co/kyc001/DexOPD)
@@ -182,9 +183,13 @@ The OCR and repository sanity tests use the Python standard library.
 
 ```bibtex
 @misc{ke2026dexopd,
-  title  = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
-  author = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
-  year   = {2026}
+  title         = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
+  author        = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
+  year          = {2026},
+  eprint        = {2611.31969},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2611.31969}
 }
 ```
 

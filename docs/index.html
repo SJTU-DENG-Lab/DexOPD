@@ -25,6 +25,7 @@
     <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
     <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></symbol>
     <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
   </svg>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -55,6 +56,7 @@
         <div class="hero-actions">
           <a class="button primary" href="#method">Explore method <svg class="icon" aria-hidden="true"><use href="#i-arrow-down"/></svg></a>
           <a class="button hero-paper" href="#results">Benchmark results</a>
+          <a class="button hero-paper" href="https://arxiv.org/abs/2611.31969"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg> arXiv</a>
           <a class="button hero-paper" href="assets/dexopd-paper.pdf"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg> Paper PDF</a>
           <a class="button hero-paper" href="https://huggingface.co/kyc001/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Model weights</a>
         </div>
@@ -473,13 +475,17 @@ image.save("dexopd.png")</code></pre>
 
     <section class="section citation-section" id="citation" aria-labelledby="citation-title">
       <div class="container citation-layout">
-        <div class="section-heading"><h2 id="citation-title">Citation</h2><p>Ke, Hu, Yang, Jin, Liu, and Deng, 2026.</p></div>
+        <div class="section-heading"><h2 id="citation-title">Citation</h2><p>Ke, Hu, Yang, Jin, Liu, and Deng, 2026. <a href="https://arxiv.org/abs/2611.31969">arXiv:2611.31969</a></p></div>
         <div class="bibtex">
           <button class="button copy-button" id="copy-citation" type="button" hidden><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy BibTeX</span></button>
           <pre><code id="bibtex-code">@misc{ke2026dexopd,
-  title  = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
-  author = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
-  year   = {2026}
+  title         = {DexOPD: Dual-Extrapolation On-Policy Distillation for Diffusion Models},
+  author        = {Yunchao Ke and Yanzhe Hu and Yi Yang and Jiachun Jin and Zhihong Liu and Zhijie Deng},
+  year          = {2026},
+  eprint        = {2611.31969},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  url           = {https://arxiv.org/abs/2611.31969}
 }</code></pre>
           <span id="copy-status" class="screen-reader" role="status"></span>
         </div>

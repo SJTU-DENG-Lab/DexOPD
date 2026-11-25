@@ -14,9 +14,10 @@ and served as WebP copies.
 2. In **Settings > Pages**, choose **Deploy from a branch** and select the
    default branch and **`/docs`**. The default URL is
    `https://sjtu-deng-lab.github.io/DexOPD/`.
-3. After arXiv assigns an ID, add the arXiv abstract URL to the paper actions in
-   `index.html` and update the BibTeX there and in the root `README.md`. The
-   current **Read paper** link opens the bundled preprint PDF.
+3. The hero **arXiv** button links to the abstract page
+   (https://arxiv.org/abs/2611.31969), and **Paper PDF** opens the bundled
+   preprint in `assets/`. Keep the BibTeX in `index.html`, the root `README.md`,
+   and `MODEL_CARD.md` in sync when the arXiv entry is revised.
 
 The social preview image is `assets/preview.jpg`. Update the `og:image` URL in
 `index.html` if the site uses a different host or repository name.
