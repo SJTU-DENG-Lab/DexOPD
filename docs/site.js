@@ -11,6 +11,45 @@ window.addEventListener('hashchange', redirectLegacyHash);
 
 const get = (id) => document.getElementById(id);
 
+// Theme toggle (Light / Dark white-paper switch)
+(function initTheme() {
+  const root = document.documentElement;
+  const saved = localStorage.getItem('dexopd-theme');
+  if (saved === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+  }
+  const btn = get('theme-toggle');
+  if (!btn) return;
+  const syncLabel = () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = isDark ? '\u2600' : '\u263E';
+    btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  };
+  syncLabel();
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    if (next === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+    localStorage.setItem('dexopd-theme', next);
+    syncLabel();
+  });
+})();
+
+// Top 2px scroll progress bar
+const scrollbar = get('scrollbar');
+if (scrollbar) {
+  const updateProgress = () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+    scrollbar.style.width = `${pct.toFixed(1)}%`;
+  };
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+}
+
 function setupTabs(list) {
   if (!list) return;
   const tabs = [...list.querySelectorAll('[role="tab"]')];
@@ -155,8 +194,8 @@ function wireCopyButton(buttonId, codeId, idleLabel, doneLabel) {
   });
 }
 
-wireCopyButton('copy-citation', 'bibtex-code', 'Copy BibTeX', 'BibTeX copied');
-wireCopyButton('copy-snippet', 'snippet-code', 'Copy snippet', 'Snippet copied');
+wireCopyButton('copy-citation', 'bibtex-code', 'Copy BibTeX', 'Copied');
+wireCopyButton('copy-snippet', 'snippet-code', 'Copy', 'Copied');
 
 // Highlight active section in sticky header
 const navLinks = [...document.querySelectorAll('#primary-nav a[href^="#"]')];

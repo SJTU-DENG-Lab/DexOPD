@@ -6,16 +6,16 @@
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const COLORS = {
-    ours: '#155c45',
-    oursBright: '#1a7a5c',
-    oursSoft: '#d8ebe1',
-    clay: '#ae4e32',
-    blue: '#415b90',
-    slate: '#5e706a',
-    muted: '#899891',
-    grid: '#e4eae4',
-    axis: '#b8c5bc',
-    ink: '#192221',
+    ours: '#0f7a50',
+    oursBright: '#129260',
+    oursSoft: '#dff3ea',
+    clay: '#d8442b',
+    blue: '#2c4296',
+    slate: '#586170',
+    muted: '#8a95a3',
+    grid: 'var(--line)',
+    axis: '#b8c2cc',
+    ink: 'var(--ink)',
   };
 
   function el(tag, attrs = {}, text = '') {

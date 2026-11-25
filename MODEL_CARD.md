@@ -16,7 +16,7 @@ tags:
 
 # DexOPD for Stable Diffusion 3.5 Medium
 
-**DexOPD** (*Dual-Extrapolation On-Policy Distillation*) consolidates three frozen Stable Diffusion 3.5 Medium specialist teachers—for **compositional alignment**, **text rendering**, and **visual quality**—into a single unified LoRA adapter. At inference time, the released student runs as a standard single-trajectory SD3.5 Medium pipeline with no auxiliary branches or extra sampling overhead.
+**DexOPD** (*Dual-Extrapolation On-Policy Distillation*) consolidates three frozen Stable Diffusion 3.5 Medium specialist teachers—for **compositional alignment**, **text rendering**, and **visual quality**—into a single unified LoRA adapter. At inference time, the released student runs as a standard single-trajectory SD3.5 Medium pipeline.
 
 **Authors:** Yunchao Ke\*, Yanzhe Hu\*, Yi Yang, Jiachun Jin, Zhihong Liu, Zhijie Deng†  
 Shanghai Jiao Tong University · Nankai University

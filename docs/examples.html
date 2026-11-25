@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DexOPD | Qualitative Comparisons &amp; Gallery</title>
   <meta name="description" content="Same-noise qualitative comparisons and multi-capability image gallery from the unified DexOPD SD3.5 Medium checkpoint.">
-  <meta name="theme-color" content="#101719">
+  <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="styles.css">
   <script defer src="examples.js"></script>
   <script defer src="examples-page.js"></script>
@@ -25,29 +25,39 @@
 
   <header class="site-header">
     <div class="container site-nav">
-      <a class="wordmark" href="index.html"><span class="wordmark-dot" aria-hidden="true"></span>DexOPD</a>
+      <a class="wordmark" href="index.html">
+        <svg class="wordmark-glyph" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 18C8 18 11 7 21 6"/>
+          <path d="M3 18C9 14 13 13 21 14" stroke-dasharray="2.5 2.5"/>
+          <circle cx="21" cy="6" r="2" fill="currentColor"/>
+        </svg>
+        DexOPD
+      </a>
       <nav aria-label="Main navigation">
         <a href="index.html#method">Method</a>
         <a href="index.html#results">Results</a>
         <a href="index.html#analysis">Analysis</a>
         <a href="index.html#run">Run</a>
         <a href="examples.html" aria-current="page">Examples</a>
+        <a href="index.html#citation">Cite</a>
       </nav>
-      <a class="code-link" href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+      <div class="nav-right">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">&#9790;</button>
+      </div>
     </div>
   </header>
 
   <main id="main">
     <section class="subpage-hero" aria-labelledby="examples-page-title">
       <div class="container subpage-hero-inner">
-        <a class="back-link" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Back to project overview</a>
+        <a class="back-link" href="index.html"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg> Back to paper overview</a>
         <h1 id="examples-page-title">Qualitative comparisons &amp; gallery</h1>
         <p>Pre-generated 1024 &times; 1024 outputs from the released DexOPD EMA LoRA (update 1,000), including same-noise model comparisons from the paper and selected multi-capability samples.</p>
         <div class="subpage-jump">
-          <a href="#demo">Same-noise comparison (6 prompts)</a>
-          <a href="#gallery">Multi-capability gallery (18 samples)</a>
-          <a href="https://arxiv.org/abs/2611.31969">Paper on arXiv</a>
-          <a href="assets/dexopd-paper.pdf">Full paper PDF</a>
+          <a class="btn-pill" href="#demo">Same-noise comparison (6 prompts)</a>
+          <a class="btn-pill" href="#gallery">Multi-capability gallery (18 samples)</a>
+          <a class="btn-pill" href="https://arxiv.org/abs/2611.31969">Paper on arXiv</a>
+          <a class="btn-pill" href="assets/dexopd-paper.pdf">Full paper PDF</a>
         </div>
       </div>
     </section>
@@ -122,8 +132,8 @@
 
   <footer>
     <div class="container footer-content">
-      <p><strong>DexOPD</strong> <span aria-hidden="true">&middot;</span> Shanghai Jiao Tong University and Nankai University <span aria-hidden="true">&middot;</span> <a href="index.html">Overview</a> <span aria-hidden="true">&middot;</span> <a href="index.html#citation">Citation</a></p>
-      <p>* Equal contribution. &Dagger; Work done during an internship at Shanghai Jiao Tong University. &dagger; <a href="mailto:zhijied@sjtu.edu.cn">Corresponding author</a>.</p>
+      <p><strong>DexOPD</strong> &middot; Shanghai Jiao Tong University &amp; Nankai University &middot; <a href="index.html">Overview</a> &middot; <a href="index.html#citation">Citation</a></p>
+      <p>Code released under the Apache 2.0 License. Base model weights are subject to the Stability AI Community License.</p>
     </div>
   </footer>
 

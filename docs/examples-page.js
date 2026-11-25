@@ -154,6 +154,28 @@ function setupTabs(list) {
 
 setupTabs(get('gallery-tabs'));
 
+// Theme toggle on examples page
+(function initTheme() {
+  const root = document.documentElement;
+  if (localStorage.getItem('dexopd-theme') === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+  }
+  const btn = get('theme-toggle');
+  if (!btn) return;
+  const syncLabel = () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    btn.textContent = isDark ? '\u2600' : '\u263E';
+  };
+  syncLabel();
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    if (next === 'dark') root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    localStorage.setItem('dexopd-theme', next);
+    syncLabel();
+  });
+})();
+
 get('close-lightbox').addEventListener('click', () => lightbox.close());
 lightbox.addEventListener('click', (event) => {
   if (event.target === lightbox) lightbox.close();
