@@ -67,7 +67,7 @@
           <a class="btn-pill solid" href="https://arxiv.org/abs/2611.31969"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg> arXiv</a>
           <a class="btn-pill" href="assets/dexopd-paper.pdf"><svg class="icon" aria-hidden="true"><use href="#i-file"/></svg> Paper PDF</a>
           <a class="btn-pill" href="https://github.com/SJTU-DENG-Lab/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg> Code</a>
-          <a class="btn-pill" href="https://huggingface.co/kyc001/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> LoRA Weights</a>
+          <a class="btn-pill" href="https://huggingface.co/SJTU-DENG-Lab/DexOPD"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> LoRA Weights</a>
           <a class="btn-pill" href="examples.html"><svg class="icon" aria-hidden="true"><use href="#i-image"/></svg> Qualitative Examples</a>
           <a class="btn-pill" href="#citation">BibTeX</a>
         </div>
@@ -521,7 +521,7 @@
             <div class="run-step-num">Step 02</div>
             <h3>Attach DexOPD LoRA</h3>
             <p>Load the released PEFT LoRA adapter (rank 32, &alpha; = 64, ~75 MB) onto the SD3.5-Medium transformer.</p>
-            <a href="https://huggingface.co/kyc001/DexOPD">kyc001/DexOPD on Hugging Face <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+            <a href="https://huggingface.co/SJTU-DENG-Lab/DexOPD">SJTU-DENG-Lab/DexOPD on Hugging Face <svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
           </div>
           <div class="run-col">
             <div class="run-step-num">Step 03</div>
@@ -543,7 +543,7 @@ from peft import PeftModel
 pipe = StableDiffusion3Pipeline.from_pretrained(
     "stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16
 )
-pipe.transformer = PeftModel.from_pretrained(pipe.transformer, "kyc001/DexOPD")
+pipe.transformer = PeftModel.from_pretrained(pipe.transformer, "SJTU-DENG-Lab/DexOPD")
 pipe.to("cuda")
 pipe.vae.to(dtype=torch.float32)
 
@@ -592,7 +592,7 @@ image.save("dexopd.png")</code></pre>
 
   <footer>
     <div class="container footer-content">
-      <p><strong>DexOPD</strong> &middot; Shanghai Jiao Tong University &amp; Nankai University &middot; <a href="https://arxiv.org/abs/2611.31969">arXiv</a> &middot; <a href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub</a> &middot; <a href="https://huggingface.co/kyc001/DexOPD">Hugging Face</a> &middot; <a href="examples.html">Examples</a></p>
+      <p><strong>DexOPD</strong> &middot; Shanghai Jiao Tong University &amp; Nankai University &middot; <a href="https://arxiv.org/abs/2611.31969">arXiv</a> &middot; <a href="https://github.com/SJTU-DENG-Lab/DexOPD">GitHub</a> &middot; <a href="https://huggingface.co/SJTU-DENG-Lab/DexOPD">Hugging Face</a> &middot; <a href="examples.html">Examples</a></p>
       <p>Code released under the Apache 2.0 License. Base model weights are subject to the Stability AI Community License.</p>
     </div>
   </footer>

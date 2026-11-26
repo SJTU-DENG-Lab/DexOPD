@@ -8,7 +8,7 @@
 [![Paper PDF](https://img.shields.io/badge/Paper-PDF-blue)](docs/assets/dexopd-paper.pdf)
 [![Project page](https://img.shields.io/badge/Project%20Page-Demo-397459)](https://sjtu-deng-lab.github.io/DexOPD/)
 [![Code](https://img.shields.io/badge/Code-GitHub-black)](https://github.com/SJTU-DENG-Lab/DexOPD)
-[![Hugging Face checkpoint](https://img.shields.io/badge/Hugging%20Face-DexOPD%20LoRA-ffcc33)](https://huggingface.co/kyc001/DexOPD)
+[![Hugging Face checkpoint](https://img.shields.io/badge/Hugging%20Face-DexOPD%20LoRA-ffcc33)](https://huggingface.co/SJTU-DENG-Lab/DexOPD)
 [![License Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE)
 
 DexOPD distills three frozen Stable Diffusion 3.5 Medium teachers into a single
@@ -103,7 +103,7 @@ training checkpoint with `--resume` and the same model, recipe, and rank count.
 
 ## Quick inference
 
-The [published DexOPD adapter](https://huggingface.co/kyc001/DexOPD) is the EMA
+The [published DexOPD adapter](https://huggingface.co/SJTU-DENG-Lab/DexOPD) is the EMA
 LoRA used for the paper's main results at update 1,000. The base SD3.5 Medium
 model requires Hugging Face access as described in [Setup](#setup). See the
 [model card](MODEL_CARD.md) for checkpoint details and benchmark context.
@@ -117,7 +117,7 @@ pipe = StableDiffusion3Pipeline.from_pretrained(
     "stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16
 )
 pipe.transformer = PeftModel.from_pretrained(
-    pipe.transformer, "kyc001/DexOPD"
+    pipe.transformer, "SJTU-DENG-Lab/DexOPD"
 )
 pipe.to("cuda")
 pipe.vae.to(dtype=torch.float32)
@@ -130,7 +130,7 @@ with torch.inference_mode(), torch.autocast("cuda", dtype=torch.float16):
 image.save("sample.png")
 ```
 
-For a local training run, replace `kyc001/DexOPD` with the path to its `lora/`
+For a local training run, replace `SJTU-DENG-Lab/DexOPD` with the path to its `lora/`
 directory, for example `runs/main/checkpoints/checkpoint-1000/lora`.
 
 ## Evaluation

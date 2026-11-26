@@ -30,8 +30,8 @@ Shanghai Jiao Tong University · Nankai University
 | Field | Value |
 | --- | --- |
 | Base model | [stabilityai/stable-diffusion-3.5-medium](https://huggingface.co/stabilityai/stable-diffusion-3.5-medium) |
-| Adapter format | [PEFT LoRA (`adapter_model.safetensors`, ~75 MB)](https://huggingface.co/kyc001/DexOPD/blob/main/adapter_model.safetensors) attached to the SD3 transformer |
-| LoRA config | [Rank 32, alpha 64 (`adapter_config.json`)](https://huggingface.co/kyc001/DexOPD/blob/main/adapter_config.json) on attention projections (`to_q`, `to_k`, `to_v`, `to_out.0`, `add_q_proj`, `add_k_proj`, `add_v_proj`, `to_add_out`) |
+| Adapter format | [PEFT LoRA (`adapter_model.safetensors`, ~75 MB)](https://huggingface.co/SJTU-DENG-Lab/DexOPD/blob/main/adapter_model.safetensors) attached to the SD3 transformer |
+| LoRA config | [Rank 32, alpha 64 (`adapter_config.json`)](https://huggingface.co/SJTU-DENG-Lab/DexOPD/blob/main/adapter_config.json) on attention projections (`to_q`, `to_k`, `to_v`, `to_out.0`, `add_q_proj`, `add_k_proj`, `add_v_proj`, `to_add_out`) |
 | Released step | Evaluation EMA after 1,000 optimizer updates (500 rounds) |
 | Training recipe | 72 native cases / update (24 per task), teacher extrapolation λ = 1.2, auxiliary weight β = 1.8, candidate gains 𝒢 = {0, 0.05, 0.25, 0.5}, history EMA decay τ = 0.995 |
 | Training resolution | 512 × 512 (paper evaluation at 512 × 512; gallery examples generated at 1024 × 1024) |
@@ -46,7 +46,7 @@ python -m pip install -r https://raw.githubusercontent.com/SJTU-DENG-Lab/DexOPD/
 huggingface-cli login
 ```
 
-3. Load the base pipeline and attach `kyc001/DexOPD` to `pipe.transformer`:
+3. Load the base pipeline and attach `SJTU-DENG-Lab/DexOPD` to `pipe.transformer`:
 
 ```python
 import torch
@@ -57,7 +57,7 @@ pipe = StableDiffusion3Pipeline.from_pretrained(
     "stabilityai/stable-diffusion-3.5-medium",
     torch_dtype=torch.float16,
 )
-pipe.transformer = PeftModel.from_pretrained(pipe.transformer, "kyc001/DexOPD")
+pipe.transformer = PeftModel.from_pretrained(pipe.transformer, "SJTU-DENG-Lab/DexOPD")
 pipe.to("cuda")
 pipe.vae.to(dtype=torch.float32)
 
@@ -123,7 +123,7 @@ All trained models share the SD3.5-Medium backbone and a 1,000-update budget, ev
 
 ## License & access
 
-- **Adapter weights:** Publicly downloadable from `kyc001/DexOPD`.
+- **Adapter weights:** Publicly downloadable from `SJTU-DENG-Lab/DexOPD`.
 - **Base model:** Requires accepting the gated [Stability AI Community License](https://huggingface.co/stabilityai/stable-diffusion-3.5-medium/blob/main/LICENSE.md) on Hugging Face.
 - **Training & evaluation code:** Released under the [Apache 2.0 License](https://github.com/SJTU-DENG-Lab/DexOPD/blob/main/LICENSE).
 
